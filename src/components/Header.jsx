@@ -85,8 +85,8 @@ const Header = () => {
               </span>
             </Typography>
           </div>
-          <Typography fontSize={13} variant='h6' fontWeight={500}>
-            ADM: :{' '}
+          <Typography fontSize={12} variant='h6' fontWeight={500}>
+            ADM:{' '}
             <span style={{ color: 'red', textTransform: 'uppercase' }}>
                 {utils.admissionNumber}
             </span>

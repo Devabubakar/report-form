@@ -114,17 +114,15 @@ const App = () => {
     setMeanScore(meanScore);
   }, [tableData]);
 
-  const totalRow = [
-    'TOTAL MARKS/POINTS',
-    '',
-    '',
-    totalPercentage,
-    '',
-    totalPoints,
-    '',
-  ];
+  const totalRow =
+  utils.form === '1' || utils.form === '2'
+    ? ['TOTAL MARKS/POINTS', '', '', totalPercentage, '', totalPoints, '']
+    : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
-  const GradeRow = ['MEAN GRADE', '', '', '', getGrade('', meanScore), '', ''];
+  const GradeRow =
+    utils.form === '3' || utils.form === '4'
+      ? ['MEAN GRADE', '', '', '', getGrade('', meanScore), '', '']
+      : ['MEAN GRADE', '', '', '', '', '', ''];
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
   const outOfRow = ['OUT OF', '', '', '', '', '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];

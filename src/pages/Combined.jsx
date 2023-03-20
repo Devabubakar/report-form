@@ -6,8 +6,10 @@ import MyExcel from '../components/MyExcel';
 import Last from '../components/Last';
 import { Button } from '@mui/material';
 import Container from '@mui/material/Container';
+import { useTable } from '../utils/useTable';
 
 const Combined = () => {
+  const utils = useTable();
   const [showPDF, setShowPDF] = useState(false);
   const reportContainer = useRef(null);
 
@@ -24,7 +26,7 @@ const Combined = () => {
     const pdf = new jsPDF();
     const imgData = canvas.toDataURL('image/png');
     pdf.addImage(imgData, 'PNG', 10, 10);
-    pdf.save('report_card.pdf');
+    pdf.save(`${utils.names}_${utils.admissionNumber}.pdf`);
 
     setShowPDF(false);
   };
