@@ -5,10 +5,21 @@ import { data } from './constant';
 import { getGrade, getPoints, getRemark } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
+import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
+import { useTable } from '../utils/useTable';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
+  const utils = useTable();
+
   const dataWithCalculations = data.map((row) => {
-    const percentage = row[1] !== '' && row[2] !== '' ? row[1] + row[2] : '';
+    const percentage =
+      (row[1] !== '' || row[1]) < 30 && (row[2] !== '' || row[2] < 70)
+        ? row[1] + row[2]
+        : '';
+
     const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
     const points = grade !== '' ? getPoints(grade) : '';
     const remark = grade !== '' ? getRemark(grade) : '';
@@ -19,24 +30,39 @@ const App = () => {
   const [totalPercentage, setTotalPercentage] = useState('');
   const [totalPoints, setTotalPoints] = useState('');
   const [meanScore, setMeanScore] = useState('');
-  
-
   const calculateTotals = (data) => {
     const totals = data.reduce(
       (totals, row) => {
         if (row[3] !== '' && row[5] !== '') {
           totals.totalPercentage += row[3];
           totals.totalPoints += row[5];
+          totals.subjectCount++;
         }
         return totals;
       },
-      { totalPercentage: 0, totalPoints: 0 }
+      { totalPercentage: 0, totalPoints: 0, subjectCount: 0 }
     );
+
+    const meanScore =
+      totals.subjectCount > 0
+        ? (totals.totalPercentage / totals.subjectCount).toFixed(1)
+        : '';
+    const meanPoints =
+      totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
+    const meanGrade = getGrade('english', meanScore);
+    const teacherComment = getTeacherComment(meanScore);
+    const principalComment = getPrincipalComment(meanScore);
+
+    utils.setPrincipalsComment(principalComment);
+    utils.setClassTeachersComment(teacherComment);
 
     return {
       ...totals,
-      meanScore: data.length > 0 ? totals.totalPercentage / data.length : '',
-      meanPoints: data.length > 0 ? totals.totalPoints / data.length : '',
+      meanScore,
+      meanPoints,
+      meanGrade,
+      teacherComment,
+      principalComment,
     };
   };
 
@@ -44,15 +70,22 @@ const App = () => {
     if (source === 'edit') {
       changes.forEach(([row, prop, oldValue, newValue]) => {
         if (row === data.length - 5) return;
+        if (prop === 1 && newValue > 30) {
+          toast.error('CAT cannot be greater than 30', {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          return;
+        }
+        if (prop === 2 && newValue > 70) {
+          toast.error('MAIN cannot be greater than 70', {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          return;
+        }
 
-        if (prop === 1) {
+        if (prop === 1 || prop === 2) {
           const newRowData = [...tableData[row]];
-          newRowData[1] = newValue; // Update value
-          const updatedData = [...tableData];
-          updatedData[row] = newRowData;
-          setTableData(updatedData);
-        } else if (prop === 1 || prop === 2) {
-          const newRowData = [...tableData[row]];
+          newRowData[prop] = newValue; // Update value
           newRowData[3] = newRowData[1] + newRowData[2]; // Update percentage
           const grade = getGrade(newRowData[0], newRowData[3]); // Calculate grade
           newRowData[4] = grade; // Update grade
@@ -64,24 +97,22 @@ const App = () => {
           setTableData(updatedData);
 
           // Update totalPercentage, totalPoints, meanScore, and meanPoints
-          const { totalPercentage, totalPoints, meanScore,  } =
+          const { totalPercentage, totalPoints, meanScore } =
             calculateTotals(updatedData);
           setTotalPercentage(totalPercentage);
           setTotalPoints(totalPoints);
           setMeanScore(meanScore);
-          
         }
       });
     }
   };
 
   React.useEffect(() => {
-    const { totalPercentage, totalPoints, meanScore,} =
+    const { totalPercentage, totalPoints, meanScore } =
       calculateTotals(tableData);
     setTotalPercentage(totalPercentage);
     setTotalPoints(totalPoints);
     setMeanScore(meanScore);
-    
   }, [tableData]);
 
   const totalRow = [
@@ -111,8 +142,8 @@ const App = () => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={600}
-        colWidths={[150, 80, 80, 80, 60, 60, 60, 70, 160, 70]}
+        height={550}
+        colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 70]}
         nestedHeaders={[
           [
             { label: 'SUBJECTs', colspan: 1 },
@@ -157,9 +188,8 @@ const App = () => {
         <HotColumn data={5} readOnly />
         <HotColumn data={6} readOnly />
         <HotColumn data={7} />
-        
       </HotTable>
-      
+      <ToastContainer />
     </div>
   );
 };

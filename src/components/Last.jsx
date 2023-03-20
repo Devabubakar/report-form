@@ -53,10 +53,10 @@ const ReportCard = () => {
       <hr />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='subtitle2' fontWeight='400'>
-          Closing Date:
+          Closing Date: <span>{utils.openingDate} </span>
         </Typography>
         <Typography variant='subtitle2' fontWeight='400'>
-          Opening Date:
+          Opening Date: <span>{utils.closingDate}</span>
         </Typography>
         <div></div>
       </div>

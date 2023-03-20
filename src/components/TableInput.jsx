@@ -54,15 +54,15 @@ const Header = () => {
         multiline
         rows={2}
         maxRows={4}
-        label="Class Teacher's Comments"
-        onChange={(e) => utils.setClassTeachersComment(e.target.value)}
+        label='Opening Date'
+        onChange={(e) => utils.setOpeningDate(e.target.value)}
       />
       <TextField
         multiline
         rows={2}
         maxRows={4}
-        label="Principal's Comments"
-        onChange={(e) => utils.setPrincipalsComment(e.target.value)}
+        label='Closing Date'
+        onChange={(e) => utils.setClosingDate(e.target.value)}
       />
     </PersonalContainer>
   );

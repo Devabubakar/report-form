@@ -5,6 +5,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { auth } from '../service/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -49,9 +50,9 @@ export const useProvideAuth = () => {
   };
 
   React.useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((userCredential) => {
+    const unsubscribe = onAuthStateChanged(auth,(userCredential) => {
       if (userCredential) {
-        setUser(userCredential.user); // set userCredential.user instead of userCredential
+        setUser(userCredential);
         setLoading(false);
       } else {
         setUser(null);

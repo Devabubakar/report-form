@@ -4,7 +4,11 @@ export const getGrade = (subject, percentage) => {
   const isHumanities =
     subject.toLowerCase().includes('english') ||
     subject.toLowerCase().includes('ire') ||
-    subject.toLowerCase().includes('kiswahili');
+    subject.toLowerCase().includes('kiswahili') ||
+    subject.toLowerCase().includes('history & govt') ||
+    subject.toLowerCase().includes('geoghraphy') || 
+    subject.toLowerCase().includes('arabic')  ||
+    subject.toLowerCase().includes('business studies')
 
   const gradingSchema = isHumanities
     ? [
@@ -116,3 +120,38 @@ export const getPercentage = (cat, main, row, percentageSum) => {
 
   return percentage;
 };
+
+export const getTeacherComment = (meanGrade) => {
+  switch (true) {
+    case (meanGrade >= 75):
+      return 'You have performed exceptionally well. Keep up the good work!';
+    case (meanGrade >= 70 && meanGrade < 75):
+      return 'You have performed well, but there is room for improvement. Please put in more effort next term.';
+    case (meanGrade >= 60 && meanGrade < 70):
+      return 'You need to improve significantly in order to perform better next term. We recommend you to spend more time revising the topics covered in class.';
+    case (meanGrade >= 50 && meanGrade < 60):
+      return 'You are not meeting the expected standards. We strongly advise you to spend more time revising the topics covered in class.';
+    case (meanGrade < 50):
+      return 'You have performed poorly this term. We strongly advise you to spend more time revising the topics covered in class.';
+    default:
+      return '';
+  }
+};
+
+export const getPrincipalComment = (meanGrade) => {
+  switch (true) {
+    case (meanGrade >= 75):
+      return 'Congratulations! You have achieved exceptional performance this term.';
+    case (meanGrade >= 70 && meanGrade < 75):
+      return 'You have done well, but there is always room for improvement. We encourage you to put in more effort next term.';
+    case (meanGrade >= 60 && meanGrade < 70):
+      return 'You need to improve significantly in order to meet the expected standards. We recommend you to spend more time revising the topics covered in class.';
+    case (meanGrade >= 50 && meanGrade < 60):
+      return 'You are not meeting the expected standards. We strongly advise you to spend more time revising the topics covered in class.';
+    case (meanGrade < 50):
+      return 'You have performed poorly this term. We strongly advise you to spend more time revising the topics covered in class.';
+    default:
+      return '';
+  }
+};
+
