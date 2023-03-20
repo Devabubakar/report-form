@@ -69,7 +69,6 @@ const App = () => {
   const handleAfterChange = (changes, source) => {
     if (source === 'edit') {
       changes.forEach(([row, prop, oldValue, newValue]) => {
-        if (row === data.length - 5) return;
         if (prop === 1 && newValue > 30) {
           toast.error('CAT cannot be greater than 30', {
             position: toast.POSITION.BOTTOM_CENTER,
