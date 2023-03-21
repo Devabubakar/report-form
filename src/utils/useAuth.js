@@ -1,11 +1,19 @@
 import React, { createContext, useContext } from 'react';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
-import { auth } from '../service/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId,
+  measurementId: process.env.REACT_APP_measurementId,
+};
+
+firebase.initializeApp(firebaseConfig);
+
 
 const AuthContext = createContext();
 
@@ -20,47 +28,55 @@ export const useAuth = () => {
 
 export const useProvideAuth = () => {
   const [user, setUser] = React.useState(null);
-  const [total, setTotal] = React.useState(0);
+
   const [loading, setLoading] = React.useState(true);
 
   const signin = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        setUser(userCredential.user);
+    return firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((response) => {
+        setUser(response.user);
         setLoading(false);
-        return userCredential.user;
-      }
-    );
+
+        return response.user;
+      });
   };
+
   const signup = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        setUser(userCredential.user);
+    return firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((response) => {
+        setUser(response.user);
+        return response.user;
+      });
+  };
+
+  const signout = () => {
+    return firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        setUser(null);
         setLoading(false);
-        return userCredential.user;
-      }
-    );
+      });
   };
 
-  const signout = async () => {
-    await signOut(auth).then(() => {
-      setUser(null);
-      setLoading(false);
-    });
-  };
-
+  //component mounts
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth,(userCredential) => {
-      if (userCredential) {
-        setUser(userCredential);
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
         setLoading(false);
       } else {
-        setUser(null);
+        setUser(false);
+        setLoading(false);
       }
     });
-
+    //clean up subscription
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
-  return { user, signin, signup, signout, loading, total, setTotal };
+  return { user, signin, signout, loading, signup };
 };
