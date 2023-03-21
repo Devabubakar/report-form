@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
 import { data } from './constant';
-import { getGrade, getPoints, getRemark } from '../utils/tableUtils';
+import { getGrade, getPoints, getRemark, meanGrade } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
 import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
@@ -43,10 +43,18 @@ const App = () => {
       { totalPercentage: 0, totalPoints: 0, subjectCount: 0 }
     );
 
-    const meanScore =
-      totals.subjectCount > 0
-        ? (totals.totalPercentage / totals.subjectCount).toFixed(1)
-        : '';
+    let meanScore = '';
+
+    if (utils.form === '1' || utils.form === '2') {
+      meanScore =
+        totals.subjectCount > 0 ? (totals.totalPercentage / 10).toFixed(1) : '';
+    }
+
+    if (utils.form === '3' || utils.form === '4') {
+      meanScore =
+        totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
+    }
+
     const meanPoints =
       totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
     const meanGrade = getGrade('english', meanScore);
@@ -114,15 +122,22 @@ const App = () => {
     setMeanScore(meanScore);
   }, [tableData]);
 
-  const totalRow =
-  utils.form === '1' || utils.form === '2'
-    ? ['TOTAL MARKS/POINTS', '', '', totalPercentage, '', totalPoints, '']
-    : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
+  const totalRow = [
+    'TOTAL MARKS/POINTS',
+    '',
+    '',
+    totalPercentage,
+    '',
+    totalPoints,
+    '',
+  ];
+
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
   const GradeRow =
-    utils.form === '3' || utils.form === '4'
-      ? ['MEAN GRADE', '', '', '', getGrade('', meanScore), '', '']
-      : ['MEAN GRADE', '', '', '', '', '', ''];
+    utils.form === '1' || utils.form === '2'
+      ? ['MEAN GRADE', '', '', '', meanGrade(meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGrade(totalPoints, true), '', ''];
+
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
   const outOfRow = ['OUT OF', '', '', '', '', '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];

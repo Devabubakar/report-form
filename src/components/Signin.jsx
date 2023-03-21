@@ -16,6 +16,7 @@ import { useAuth } from '../utils/useAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navigate, useLocation } from 'react-router-dom';
+import Hulugho from '../assets/hulucho.jpeg';
 
 function Copyright(props) {
   return (
@@ -71,12 +72,16 @@ const SignIn = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component='h1' variant='h5'>
-            Sign in
-          </Typography>
+          <img
+            src={Hulugho}
+            alt='hulucho'
+            style={{
+              bgcolor: 'secondary.main',
+              width: '300px',
+              height: '240px',
+            }}
+          />
+
           <Box
             component='form'
             onSubmit={handleSubmit}
@@ -116,11 +121,7 @@ const SignIn = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href='#' variant='body2'>
-                  Forgot password?
-                </Link>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item></Grid>
             </Grid>
           </Box>
