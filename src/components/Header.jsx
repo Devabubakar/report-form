@@ -40,7 +40,7 @@ const Header = () => {
           PROGRESS REPORT
         </Typography>
         <Typography fontWeight={600} variant='h6'>
-          HULUGHU GIRLS SEC. SCHOOL
+          HULUGHO GIRLS SEC. SCHOOL
         </Typography>
         <br />
         <Typography fontSize={18} variant='h6' fontWeight={500}>
