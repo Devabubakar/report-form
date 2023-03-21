@@ -2,6 +2,7 @@ import { TextField } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
 import { useTable } from '../utils/useTable';
+import Typography from '@mui/material/Typography';
 
 const PersonalContainer = styled.div`
   display: grid;
@@ -14,6 +15,10 @@ const Header = () => {
   const utils = useTable();
   return (
     <PersonalContainer>
+    
+      <Typography variant='subtitle1' color='red' >
+        Ensure you fill this section first 
+      </Typography> <br />
       <TextField
         value={utils.names}
         onChange={(e) => utils.setNames(e.target.value)}

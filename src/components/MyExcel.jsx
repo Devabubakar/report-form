@@ -122,15 +122,10 @@ const App = () => {
     setMeanScore(meanScore);
   }, [tableData]);
 
-  const totalRow = [
-    'TOTAL MARKS/POINTS',
-    '',
-    '',
-    totalPercentage,
-    '',
-    totalPoints,
-    '',
-  ];
+  const totalRow =
+    utils.form === '1' || utils.form === '2'
+      ? ['TOTAL MARKS/POINTS', '', '', totalPercentage, '', '']
+      : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
   const GradeRow =
