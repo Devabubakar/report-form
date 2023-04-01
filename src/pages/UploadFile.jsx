@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState,  useRef } from 'react';
 import { Button, Typography } from '@mui/material';
 import readXlsxFile from 'read-excel-file';
+import { useTable } from '../utils/useTable';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { Navigate } from 'react-router';
+import Automate from '../components/Automate';
+
 
 function ExcelToJson() {
   const [file, setFile] = useState(null);
   const [jsonData, setJsonData] = useState(null);
   const [error, setError] = useState(null);
+  const [showPDF, setShowPDF] = useState(false);
+  const utils = useTable();
+ 
+  
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -46,19 +56,19 @@ function ExcelToJson() {
               };
             }
             for (let i = 3; i < row.length; i += 2) {
-                const subject_index = Math.floor((i - 3) / 2);
-                const subject_name = subjects[subject_index].subject_name;
-                const cat = row[i];
-                const main = row[i + 1];
-                students[student_id].subjects.push({
-                  subject_name: subject_name,
-                  cat: cat,
-                  main: main,
-                });
-              }
-              
+              const subject_index = Math.floor((i - 3) / 2);
+              const subject_name = subjects[subject_index].subject_name;
+              const cat = row[i];
+              const main = row[i + 1];
+              students[student_id].subjects.push({
+                subject_name: subject_name,
+                cat: cat,
+                main: main,
+              });
+            }
           });
           setJsonData(Object.values(students));
+          utils.setStudentsData(Object.values(students));
         });
       } else {
         setError('Invalid file type. Please upload an Excel file or CSV file.');
@@ -66,12 +76,8 @@ function ExcelToJson() {
     }
   };
 
-  // Handle submit button click
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(jsonData);
-  };
-
+  
+  console.log(utils.studentsData)
   return (
     <div>
       <input type='file' onChange={handleFileChange} />
@@ -79,10 +85,8 @@ function ExcelToJson() {
       {jsonData && (
         <div>
           <Typography>JSON data:</Typography>
-          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-          <Button variant='contained' onClick={handleSubmit}>
-            Submit
-          </Button>
+        
+          <Automate utils={utils.studentsData} />
         </div>
       )}
     </div>
