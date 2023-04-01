@@ -4,6 +4,7 @@ import { AuthProvider } from './utils/useAuth';
 import { Suspense, lazy } from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { TableInputProvider } from './utils/useTable';
+import Test from './pages/Test';
 
 
 // Import PrivateRoute first
@@ -37,6 +38,7 @@ function App() {
               }
             />
             <Route path='/signin' element={<SignIn />} />
+            <Route path='/test' element={<Test />} />
           </Routes>
         </TableInputProvider>
       </AuthProvider>
