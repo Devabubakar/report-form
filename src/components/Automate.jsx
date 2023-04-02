@@ -125,8 +125,7 @@ function Automate({ utils }) {
         const student = utils[i];
         // Generate HTML content for the student report card
         setContent(generateReportCard(student));
-        // Wait for the content to be added to the DOM before rendering it as a canvas
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        
         // Convert HTML content to canvas
         const canvas = await html2canvas(document.querySelector('#content'));
 
@@ -153,7 +152,7 @@ function Automate({ utils }) {
   return (
     <>
       {utils.map((student, index) => (
-        <div id='content' style={{ display: 'none' }}>
+        <div id='content' >
           {content}
         </div>
       ))}
