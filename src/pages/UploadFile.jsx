@@ -1,4 +1,4 @@
-import React, { useState,  useRef } from 'react';
+import React, { useState } from 'react';
 import { Button, Typography } from '@mui/material';
 import readXlsxFile from 'read-excel-file';
 import { useTable } from '../utils/useTable';
@@ -7,15 +7,12 @@ import jsPDF from 'jspdf';
 import { Navigate } from 'react-router';
 import Automate from '../components/Automate';
 
-
 function ExcelToJson() {
   const [file, setFile] = useState(null);
   const [jsonData, setJsonData] = useState(null);
   const [error, setError] = useState(null);
   const [showPDF, setShowPDF] = useState(false);
   const utils = useTable();
- 
-  
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -76,16 +73,23 @@ function ExcelToJson() {
     }
   };
 
-  
-  console.log(utils.studentsData)
   return (
     <div>
-      <input type='file' onChange={handleFileChange} />
-      {error && <Typography color='error'>{error}</Typography>}
+      <input
+        type="file"
+        id="upload-button"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+      <label htmlFor="upload-button">
+        <Button variant="outlined" component="span">
+          Upload Excel File
+        </Button>
+      </label>
+      {error && <Typography color="error">{error}</Typography>}
       {jsonData && (
         <div>
-          <Typography>JSON data:</Typography>
-        
+          
           <Automate utils={utils.studentsData} />
         </div>
       )}

@@ -38,7 +38,7 @@ const PersonalContainer = styled.div`
   margin-left: 10px;
 `;
 
-const Header = ({ utils,studentName }) => {
+const Header = ({ utils }) => {
   return (
     <HeaderContainer>
       <HuluchoImg src={Hulucho} alt='hulucho' />
@@ -63,7 +63,7 @@ const Header = ({ utils,studentName }) => {
             <Typography fontSize={12} variant='h6' fontWeight={500}>
               NAMES:{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {studentName}
+                {utils.student_name}
               </span>
             </Typography>
             <Typography fontSize={13} variant='h6' fontWeight={500}>
@@ -104,15 +104,16 @@ const Header = ({ utils,studentName }) => {
     </HeaderContainer>
   );
 };
+
 const generateReportCard = (student) => {
-    return (
-      <div>
-        <Header studentName={student.student_name} utils={student} />
-        <br />
-      </div>
-    );
-  };
-  
+  return (
+    <div>
+      <Header utils={student} />
+      <MyExcel utils={student} />
+      <br />
+    </div>
+  );
+};
 
 function Automate({ utils }) {
   const [content, setContent] = useState(null);
@@ -133,24 +134,42 @@ function Automate({ utils }) {
   };
 
   async function* generatePDFs(students) {
-    for (const student of students) {
+    const sortedStudents = students.sort((a, b) =>
+      a.student_name.localeCompare(b.student_name)
+    );
+  
+    for (const student of sortedStudents) {
       setContent(generateReportCard(student));
       
+      // Add a short delay to give the component time to render
+      await new Promise(resolve => setTimeout(resolve, 100));
+  
       const canvas = await html2canvas(document.querySelector('#content'));
-
+  
       const pdf = new jsPDF();
       const imgData = canvas.toDataURL('image/png', 1.0);
+  
+      let pdfName = `${student.student_name
+        .replace(/[^a-z0-9]/gi, '_')
+        .toLowerCase()}`;
+  
+      if (student.student_id) {
+        pdfName += `_${student.student_id}`;
+      }
+  
       pdf.addImage(imgData, 'PNG', 10, 10);
-
-      const pdfData = pdf.output('blob');
-      // Include the student name in the PDF file name
-
+  
+      const pdfData = await pdf.output('blob');
+  
       yield {
-        name: student.student_name.replace(/[^a-z0-9]/gi, '_').toLowerCase(),
+        name: pdfName,
         data: pdfData,
       };
     }
   }
+  
+  
+
   const handleGeneratePDF = async () => {
     try {
       const zip = new JSZip();
