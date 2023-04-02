@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import Hulucho from '../assets/hulucho.jpeg';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
+import AutoTable from './Temp';
 
 const HeaderContainer = styled.div`
   display: grid;
@@ -106,10 +107,11 @@ const Header = ({ utils }) => {
 };
 
 const generateReportCard = (student) => {
+  console.log(student);
   return (
     <div>
       <Header utils={student} />
-      <MyExcel utils={student} />
+      <AutoTable subjects={student.subjects} />
       <br />
     </div>
   );
@@ -137,38 +139,36 @@ function Automate({ utils }) {
     const sortedStudents = students.sort((a, b) =>
       a.student_name.localeCompare(b.student_name)
     );
-  
+
     for (const student of sortedStudents) {
       setContent(generateReportCard(student));
-      
+
       // Add a short delay to give the component time to render
-      await new Promise(resolve => setTimeout(resolve, 100));
-  
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const canvas = await html2canvas(document.querySelector('#content'));
-  
+
       const pdf = new jsPDF();
       const imgData = canvas.toDataURL('image/png', 1.0);
-  
+
       let pdfName = `${student.student_name
         .replace(/[^a-z0-9]/gi, '_')
         .toLowerCase()}`;
-  
+
       if (student.student_id) {
         pdfName += `_${student.student_id}`;
       }
-  
+
       pdf.addImage(imgData, 'PNG', 10, 10);
-  
+
       const pdfData = await pdf.output('blob');
-  
+
       yield {
         name: pdfName,
         data: pdfData,
       };
     }
   }
-  
-  
 
   const handleGeneratePDF = async () => {
     try {
