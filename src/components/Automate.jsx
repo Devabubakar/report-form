@@ -38,7 +38,7 @@ const PersonalContainer = styled.div`
   margin-left: 10px;
 `;
 
-const Header = ({ utils }) => {
+const Header = ({ utils,studentName }) => {
   return (
     <HeaderContainer>
       <HuluchoImg src={Hulucho} alt='hulucho' />
@@ -63,7 +63,7 @@ const Header = ({ utils }) => {
             <Typography fontSize={12} variant='h6' fontWeight={500}>
               NAMES:{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {utils.student_name}
+                {studentName}
               </span>
             </Typography>
             <Typography fontSize={13} variant='h6' fontWeight={500}>
@@ -104,44 +104,60 @@ const Header = ({ utils }) => {
     </HeaderContainer>
   );
 };
-function generateReportCard(student) {
-  return (
-    <div>
-      <Header utils={student} />
-      <br />
-    </div>
-  );
-}
+const generateReportCard = (student) => {
+    return (
+      <div>
+        <Header studentName={student.student_name} utils={student} />
+        <br />
+      </div>
+    );
+  };
+  
 
 function Automate({ utils }) {
   const [content, setContent] = useState(null);
+
+  const waitForImageLoad = (elem) => {
+    return new Promise((resolve) => {
+      const img = elem.querySelector('img');
+      if (!img) {
+        resolve();
+        return;
+      }
+      if (img.complete) {
+        resolve();
+      } else {
+        img.addEventListener('load', () => resolve());
+      }
+    });
+  };
+
+  async function* generatePDFs(students) {
+    for (const student of students) {
+      setContent(generateReportCard(student));
+      
+      const canvas = await html2canvas(document.querySelector('#content'));
+
+      const pdf = new jsPDF();
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      pdf.addImage(imgData, 'PNG', 10, 10);
+
+      const pdfData = pdf.output('blob');
+      // Include the student name in the PDF file name
+
+      yield {
+        name: student.student_name.replace(/[^a-z0-9]/gi, '_').toLowerCase(),
+        data: pdfData,
+      };
+    }
+  }
   const handleGeneratePDF = async () => {
     try {
-      // Create a new instance of JSZip
       const zip = new JSZip();
-
-      // Loop through each student and create a separate PDF file for each
-      for (let i = 0; i < utils.length; i++) {
-        const student = utils[i];
-        // Generate HTML content for the student report card
-        setContent(generateReportCard(student));
-        
-        // Convert HTML content to canvas
-        const canvas = await html2canvas(document.querySelector('#content'));
-
-        // Create a new PDF document
-        const doc = new jsPDF();
-
-        // Add canvas to PDF document
-        const imgData = canvas.toDataURL('image/jpeg');
-        doc.addImage(imgData, 'JPEG', 10, 10, 190, 277);
-
-        // Add PDF file for the student to JSZip instance
-        const pdfData = doc.output('blob');
-        zip.file(`${student.student_name}.pdf`, pdfData);
+      for await (const pdf of generatePDFs(utils)) {
+        zip.file(`${pdf.name}.pdf`, pdf.data, { filename: `${pdf.name}.pdf` });
       }
 
-      // Generate the folder containing all PDF files
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       saveAs(zipBlob, 'report-cards.zip');
     } catch (error) {
@@ -151,11 +167,8 @@ function Automate({ utils }) {
 
   return (
     <>
-      {utils.map((student, index) => (
-        <div id='content' >
-          {content}
-        </div>
-      ))}
+      <div id='content'>{content}</div>
+
       <Button variant='contained' onClick={handleGeneratePDF}>
         Download All Report Cards
       </Button>
