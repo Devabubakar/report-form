@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
+
 import { getGrade, getPoints, getRemark, meanGrade } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
@@ -11,14 +12,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 const App = ({studentsData}) => {
-  const data = studentsData.subjects;
   const utils = useTable();
-  
-
+  const data = studentsData.subjects
   const dataWithCalculations = data.map((row) => {
     const percentage =
-      data.cat + data.main
-    const grade = percentage !== '' ? getGrade(data.subject_name, percentage) : '';
+      (row[1] !== '' || row[1]) < 30 && (row[2] !== '' || row[2] < 70)
+        ? row[1] + row[2]
+        : '';
+
+    const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
     const points = grade !== '' ? getPoints(grade) : '';
     const remark = grade !== '' ? getRemark(grade) : '';
     return [...row, percentage, grade, points, remark];
@@ -28,8 +30,6 @@ const App = ({studentsData}) => {
   const [totalPercentage, setTotalPercentage] = useState('');
   const [totalPoints, setTotalPoints] = useState('');
   const [meanScore, setMeanScore] = useState('');
-
-  console.log(`Helo ${tableData}`)
   const calculateTotals = (data) => {
     const totals = data.reduce(
       (totals, row) => {
@@ -45,12 +45,12 @@ const App = ({studentsData}) => {
 
     let meanScore = '';
 
-    if (studentsData.class_section === '1' || studentsData.class_section === '2') {
+    if (utils.form === '1' || utils.form === '2') {
       meanScore =
         totals.subjectCount > 0 ? (totals.totalPercentage / 10).toFixed(1) : '';
     }
 
-    if (studentsData.class_section === '3' || studentsData.class_section === '4') {
+    if (utils.form === '3' || utils.form === '4') {
       meanScore =
         totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     }
@@ -94,7 +94,7 @@ const App = ({studentsData}) => {
           const newRowData = [...tableData[row]];
           newRowData[prop] = newValue; // Update value
           newRowData[3] = newRowData[1] + newRowData[2]; // Update percentage
-          const grade = getGrade(data, newRowData[3]); // Calculate grade
+          const grade = getGrade(newRowData[0], newRowData[3]); // Calculate grade
           newRowData[4] = grade; // Update grade
           newRowData[5] = getPoints(grade); // Update points
           newRowData[6] = getRemark(grade); // Update remarks
