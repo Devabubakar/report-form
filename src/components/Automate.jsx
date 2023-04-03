@@ -107,11 +107,11 @@ const Header = ({ utils }) => {
 };
 
 const generateReportCard = (student) => {
-  console.log(student);
+  
   return (
     <div>
       <Header utils={student} />
-      <AutoTable subjects={student.subjects} />
+      <AutoTable studentsData={student} />
       <br />
     </div>
   );

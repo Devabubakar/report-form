@@ -27,22 +27,37 @@ function ExcelToJson() {
       ) {
         setError(null);
         setFile(files[0]);
-
-        // Read the file and convert it to JSON data
         readXlsxFile(files[0]).then((rows) => {
-          const subjects = rows[0].slice(3).reduce((acc, curr, i) => {
-            if (i % 2 === 0) {
-              acc.push({
-                subject_name: curr,
-                cat: 'cat',
-                main: 'main',
-              });
-            }
-            return acc;
-          }, []);
+          const headerRow = rows.shift();
 
+          if (!headerRow || headerRow.length < 4) {
+            setError('Invalid file format. Please upload a valid Excel file.');
+            return;
+          }
+
+          const headerSubjects = headerRow
+            .slice(3)
+            .filter((subject) => subject);
+
+          console.log(headerSubjects);
+
+          // Read categories (cat) and main values from the excel
+          const catIndexes = headerSubjects.map(
+            (subject, index) => index * 2 + 3
+          );
+          const mainIndexes = headerSubjects.map(
+            (subject, index) => index * 2 + 4
+          );
+
+          const subjects = headerSubjects.map((subject) => [
+            subject?.toUpperCase() ?? '',
+            '',
+            '',
+          ]);
+
+          // ...
           const students = {};
-          rows.slice(2).forEach((row) => {
+          rows.forEach((row) => {
             const student_id = row[0];
             if (!students[student_id]) {
               students[student_id] = {
@@ -52,18 +67,25 @@ function ExcelToJson() {
                 subjects: [],
               };
             }
-            for (let i = 3; i < row.length; i += 2) {
-              const subject_index = Math.floor((i - 3) / 2);
-              const subject_name = subjects[subject_index].subject_name;
-              const cat = row[i];
-              const main = row[i + 1];
-              students[student_id].subjects.push({
-                subject_name: subject_name,
-                cat: cat,
-                main: main,
-              });
-            }
+
+            const subjectsData = [];
+
+            headerSubjects.forEach((_, i) => {
+              const subjectName = subjects[i][0];
+              const cat = row[catIndexes[i]] || '';
+              const main = row[mainIndexes[i]] || '';
+
+              // Modify subjectData array format to [subjectName, cat, main]
+              const subjectData = [subjectName.toUpperCase(), cat, main];
+
+              // Push subjectData array into subjectsData array
+              subjectsData.push(subjectData);
+            });
+
+            // Set subjects property of students object to subjectsData array
+            students[student_id].subjects = subjectsData;
           });
+
           setJsonData(Object.values(students));
           utils.setStudentsData(Object.values(students));
         });
@@ -73,24 +95,27 @@ function ExcelToJson() {
     }
   };
 
+  // Remove the first element of studentsData array, which contains hardcoded data
+  const studentsData = utils.studentsData.slice(1);
+  console.log(studentsData);
+
   return (
     <div>
       <input
-        type="file"
-        id="upload-button"
+        type='file'
+        id='upload-button'
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-      <label htmlFor="upload-button">
-        <Button variant="outlined" component="span">
+      <label htmlFor='upload-button'>
+        <Button variant='outlined' component='span'>
           Upload Excel File
         </Button>
       </label>
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <Typography color='error'>{error}</Typography>}
       {jsonData && (
         <div>
-          
-          <Automate utils={utils.studentsData} />
+          <Automate utils={studentsData} />
         </div>
       )}
     </div>

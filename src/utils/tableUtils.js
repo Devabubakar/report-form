@@ -1,6 +1,6 @@
 
 export const getGrade = (subject, percentage) => {
-  console.log(percentage,subject)
+  
   const isHumanities =
     subject.toLowerCase().includes('english') ||
     subject.toLowerCase().includes('ire') ||

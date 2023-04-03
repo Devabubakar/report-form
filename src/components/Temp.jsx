@@ -1,81 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { getGrade, getPoints, getRemark, meanGrade } from '../utils/tableUtils';
-import { useTable } from '../utils/useTable';
-
+import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
 import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
+import { useTable } from '../utils/useTable';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
-const AutoTable = ({ student, subjects }) => {
+const App = ({studentsData}) => {
+  const data = studentsData.subjects;
   const utils = useTable();
+  
 
-  // calculate total Percentage
-
-  // Manipulate the data to match the format expected by the table
-  const dataWithCalculations = subjects.map((subject) => {
-    const totalMarks = subject.cat + subject.main;
-    const percentage = (totalMarks / 100) * 100;
-    const grade = getGrade(subject.subject_name, totalMarks.toFixed(1));
-    console.log(grade)
-    const points = getPoints(grade);
-    const remark = getRemark(grade);
-
-    return [
-      
-      subject.subject_name,
-      subject.cat,
-      subject.main,
-      totalMarks.toFixed(1),
-      grade,
-      points,
-      remark,
-      '',
-    ];
+  const dataWithCalculations = data.map((row) => {
+    const percentage =
+      data.cat + data.main
+    const grade = percentage !== '' ? getGrade(data.subject_name, percentage) : '';
+    const points = grade !== '' ? getPoints(grade) : '';
+    const remark = grade !== '' ? getRemark(grade) : '';
+    return [...row, percentage, grade, points, remark];
   });
 
   const [tableData, setTableData] = useState(dataWithCalculations);
-
-  const totalRow = ['Total', '', '', '', '', '', '', '', '', ''];
-  const otherRow = ['Other-', '', '', '', '', '', '', '', '', ''];
-  const gradeRow = ['Grade', '', '', '', '', '', '', '', '', ''];
-  const positionThisTermRow = [
-    'Position This Term',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ];
-  const outOfRow = ['Out Of', '', '', '', '', '', '', ''];
-  const positionLastTermRow = [
-    'Position Last Term',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ];
-
   const [totalPercentage, setTotalPercentage] = useState('');
   const [totalPoints, setTotalPoints] = useState('');
   const [meanScore, setMeanScore] = useState('');
 
+  console.log(`Helo ${tableData}`)
   const calculateTotals = (data) => {
     const totals = data.reduce(
       (totals, row) => {
         if (row[3] !== '' && row[5] !== '') {
-          totals.totalPercentage += parseFloat(row[3]);
-          totals.totalPoints += parseFloat(row[5]);
+          totals.totalPercentage += row[3];
+          totals.totalPoints += row[5];
           totals.subjectCount++;
         }
         return totals;
@@ -85,16 +45,14 @@ const AutoTable = ({ student, subjects }) => {
 
     let meanScore = '';
 
-    if (student.class_section === '1' || student.class_section === '2') {
+    if (studentsData.class_section === '1' || studentsData.class_section === '2') {
       meanScore =
         totals.subjectCount > 0 ? (totals.totalPercentage / 10).toFixed(1) : '';
     }
 
-    if (student.class_section === '3' || student.class_section === '4') {
+    if (studentsData.class_section === '3' || studentsData.class_section === '4') {
       meanScore =
-        totals.subjectCount > 0
-          ? ((totals.totalPoints / 7) * 10).toFixed(1)
-          : '';
+        totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     }
 
     const meanPoints =
@@ -107,37 +65,77 @@ const AutoTable = ({ student, subjects }) => {
     utils.setClassTeachersComment(teacherComment);
 
     return {
-      totalPercentage: totals.totalPercentage.toFixed(2),
-      totalPoints: totals.totalPoints.toFixed(2),
-      subjectCount: totals.subjectCount,
+      ...totals,
       meanScore,
-      meanPoints: meanPoints.toFixed(2),
+      meanPoints,
       meanGrade,
       teacherComment,
       principalComment,
     };
   };
 
-  function updatePercentage(row) {
-    const cat = parseFloat(tableData[row][1]);
-    const main = parseFloat(tableData[row][2]);
+  const handleAfterChange = (changes, source) => {
+    if (source === 'edit') {
+      changes.forEach(([row, prop, oldValue, newValue]) => {
+        if (prop === 1 && newValue > 30) {
+          toast.error('CAT cannot be greater than 30', {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          return;
+        }
+        if (prop === 2 && newValue > 70) {
+          toast.error('MAIN cannot be greater than 70', {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          return;
+        }
 
-    if (!isNaN(cat) && !isNaN(main)) {
-      const percentage = ((cat + main) / 100) * 100;
-      tableData[row][3] = percentage.toFixed(2);
-      setTableData(tableData);
+        if (prop === 1 || prop === 2) {
+          const newRowData = [...tableData[row]];
+          newRowData[prop] = newValue; // Update value
+          newRowData[3] = newRowData[1] + newRowData[2]; // Update percentage
+          const grade = getGrade(data, newRowData[3]); // Calculate grade
+          newRowData[4] = grade; // Update grade
+          newRowData[5] = getPoints(grade); // Update points
+          newRowData[6] = getRemark(grade); // Update remarks
+
+          const updatedData = [...tableData];
+          updatedData[row] = newRowData;
+          setTableData(updatedData);
+
+          // Update totalPercentage, totalPoints, meanScore, and meanPoints
+          const { totalPercentage, totalPoints, meanScore } =
+            calculateTotals(updatedData);
+          setTotalPercentage(totalPercentage);
+          setTotalPoints(totalPoints);
+          setMeanScore(meanScore);
+        }
+      });
     }
-  }
-
-  const afterChange = (changes, source) => {
-    if (source !== 'edit') return;
-
-    changes.forEach(([row, col, oldValue, newValue]) => {
-      if (col === 1 || col === 2) {
-        updatePercentage(row);
-      }
-    });
   };
+
+  React.useEffect(() => {
+    const { totalPercentage, totalPoints, meanScore } =
+      calculateTotals(tableData);
+    setTotalPercentage(totalPercentage);
+    setTotalPoints(totalPoints);
+    setMeanScore(meanScore);
+  }, [tableData]);
+
+  const totalRow =
+    utils.form === '1' || utils.form === '2'
+      ? ['TOTAL MARKS/POINTS', '', '', totalPercentage, '', '']
+      : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
+
+  const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
+  const GradeRow =
+    utils.form === '1' || utils.form === '2'
+      ? ['MEAN GRADE', '', '', '', meanGrade(meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGrade(totalPoints, true), '', ''];
+
+  const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
+  const outOfRow = ['OUT OF', '', '', '', '', '', ''];
+  const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
 
   return (
     <div>
@@ -145,8 +143,8 @@ const AutoTable = ({ student, subjects }) => {
         data={[
           ...tableData,
           totalRow,
-          otherRow,
-          gradeRow,
+          OtherRow,
+          GradeRow,
           positionThisTermRow,
           outOfRow,
           positionLastTermRow,
@@ -155,21 +153,21 @@ const AutoTable = ({ student, subjects }) => {
         colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 70]}
         nestedHeaders={[
           [
-            { label: 'SUBJECTS', colspan: 1 },
+            { label: 'SUBJECTs', colspan: 1 },
             { label: 'CAT', colspan: 1 },
-            { label: 'MAIN', colspan: 1 },
+            { label: 'MAIN ', colspan: 1 },
             { label: 'Total', colspan: 3 },
             { label: 'Remarks', colspan: 1 },
             { label: 'INITIALS', colspan: 1 },
           ],
+
           [
             '',
             'out of 30',
-            'out of 70',
+            'out of 70 ',
             'Percentage',
             'Grade',
             'Points',
-            '',
             '',
             '',
             '',
@@ -182,9 +180,11 @@ const AutoTable = ({ student, subjects }) => {
         contextMenu={true}
         multiColumnSorting={true}
         filters={true}
+        afterGetColHeader={alignHeaders}
+        beforeRenderer={addClassesToRows}
         manualRowMove={true}
         licenseKey='non-commercial-and-evaluation'
-        afterChange={afterChange}
+        afterChange={handleAfterChange}
         columnHeaderHeight={[20, 20]}
       >
         <HotColumn data={0} readOnly />
@@ -201,4 +201,4 @@ const AutoTable = ({ student, subjects }) => {
   );
 };
 
-export default AutoTable;
+export default App;
