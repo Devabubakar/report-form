@@ -12,32 +12,32 @@ export const getGrade = (subject, percentage) => {
 
   const gradingSchema = isHumanities
     ? [
-        { grade: 'E', min: 0, max: 24 },
-        { grade: 'D-', min: 25, max: 29 },
-        { grade: 'D', min: 30, max: 34 },
-        { grade: 'D+', min: 35, max: 39 },
-        { grade: 'C-', min: 40, max: 44 },
-        { grade: 'C', min: 45, max: 49 },
-        { grade: 'C+', min: 50, max: 54 },
-        { grade: 'B-', min: 55, max: 59 },
-        { grade: 'B', min: 60, max: 61 },
-        { grade: 'B+', min: 65, max: 69 },
-        { grade: 'A-', min: 70, max: 74 },
-        { grade: 'A', min: 75, max: 100 },
+        { grade: 'E', min: 0.0, max: 24.9 },
+        { grade: 'D-', min: 25.0, max: 29.9 },
+        { grade: 'D', min: 30.0, max: 34.9 },
+        { grade: 'D+', min: 35.0, max: 39.9 },
+        { grade: 'C-', min: 40.0, max: 44.9 },
+        { grade: 'C', min: 45.0, max: 49.9 },
+        { grade: 'C+', min: 50.0, max: 54.9 },
+        { grade: 'B-', min: 55.0, max: 59.9 },
+        { grade: 'B', min: 60.0, max: 61.9 },
+        { grade: 'B+', min: 62.0, max: 64.9 },
+        { grade: 'A-', min: 65.0, max: 69.9 },
+        { grade: 'A', min: 70.0, max: 100.0 },
       ]
     : [
-        { grade: 'E', min: 0, max: 14 },
-        { grade: 'D-', min: 15, max: 19 },
-        { grade: 'D', min: 20, max: 24 },
-        { grade: 'D+', min: 25, max: 29 },
-        { grade: 'C-', min: 30, max: 34 },
-        { grade: 'C', min: 35, max: 39 },
-        { grade: 'C+', min: 40, max: 44 },
-        { grade: 'B-', min: 45, max: 49 },
-        { grade: 'B', min: 50, max: 51 },
-        { grade: 'B+', min: 55, max: 59 },
-        { grade: 'A-', min: 60, max: 64 },
-        { grade: 'A', min: 65, max: 100 },
+        { grade: 'E', min: 0.0, max: 14.9 },
+        { grade: 'D-', min: 15.0, max: 19.9 },
+        { grade: 'D', min: 20.0, max: 24.9 },
+        { grade: 'D+', min: 25.0, max: 29.9 },
+        { grade: 'C-', min: 30.0, max: 34.9 },
+        { grade: 'C', min: 35.0, max: 39.9 },
+        { grade: 'C+', min: 40.0, max: 44.9 },
+        { grade: 'B-', min: 45.0, max: 49.9 },
+        { grade: 'B', min: 50.0, max: 51.9 },
+        { grade: 'B+', min: 52.0, max: 54.9 },
+        { grade: 'A-', min: 55.0, max: 59.9 },
+        { grade: 'A', min: 60.0, max: 100.0 },
       ];
 
   const matchingEntry = gradingSchema.find(
@@ -46,7 +46,9 @@ export const getGrade = (subject, percentage) => {
 
   return matchingEntry?.grade;
 };
+
 export const meanGradeUtil = (meanScore, isPoint) => {
+
   const gradingSchema = isPoint
     ? [
         { grade: 'E', result: 1 },
@@ -63,18 +65,18 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         { grade: 'A', result: 12 },
       ]
     : [
-        { grade: 'E', min: 0, max: 19 },
-        { grade: 'D-', min: 20, max: 24 },
-        { grade: 'D', min: 25, max: 29 },
-        { grade: 'D+', min: 30, max: 34 },
-        { grade: 'C-', min: 35, max: 39 },
-        { grade: 'C', min: 40, max: 44 },
-        { grade: 'C+', min: 45, max: 49 },
-        { grade: 'B-', min: 50, max: 54 },
-        { grade: 'B', min: 55, max: 59 },
-        { grade: 'B+', min: 60, max: 64 },
-        { grade: 'A-', min: 65, max: 69 },
-        { grade: 'A', min: 70, max: 100 },
+        { grade: 'E', min: 0, max: 19.0 },
+        { grade: 'D-', min: 19.1, max: 23.9 },
+        { grade: 'D', min: 24.0, max: 28.9 },
+        { grade: 'D+', min: 29.0, max: 33.9 },
+        { grade: 'C-', min: 34.0, max: 38.9 },
+        { grade: 'C', min: 39.0, max: 43.9 },
+        { grade: 'C+', min: 44.0, max: 48.9 },
+        { grade: 'B-', min: 49.0, max: 53.9 },
+        { grade: 'B', min: 54.0, max: 58.9 },
+        { grade: 'B+', min: 59.0, max: 63.9 },
+        { grade: 'A-', min: 64.0, max: 68.9 },
+        { grade: 'A', min: 69.0, max: 100.0 },
       ];
 
   
@@ -85,8 +87,9 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         (entry) => meanScore >= entry.min && meanScore <= entry.max
       );
 
-  return matchingEntry?.grade;
+  return matchingEntry.grade;
 };
+
 
 export const getPoints = (grade) => {
   switch (grade) {
