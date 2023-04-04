@@ -7,7 +7,8 @@ import Last from '../components/Last';
 import { Button } from '@mui/material';
 import Container from '@mui/material/Container';
 import { useTable } from '../utils/useTable';
-
+import Typography from '@mui/material/Typography';
+import Automate from '../components/Automate';
 const Combined = () => {
   const utils = useTable();
   const [showPDF, setShowPDF] = useState(false);
@@ -52,6 +53,7 @@ const Combined = () => {
         <Header />
         <MyExcel />
         <Last />
+        
       </div>
       <div
         style={{
@@ -66,6 +68,8 @@ const Combined = () => {
         <Button onClick={handlePrint} variant='contained'>
           Print
         </Button>
+       
+
       </div>
       {showPDF && (
         <iframe

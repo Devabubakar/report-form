@@ -12,8 +12,11 @@ import styled from 'styled-components';
 import Hulucho from '../assets/hulucho.jpeg';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import AutoTable from './Temp'
+
+
 
 
 
@@ -118,6 +121,7 @@ const generateReportCard = (student) => {
     <div>
       <Header utils={student} />
       <AutoTable studentsData={student} />
+      <Last />
       <br />
     </div>
   );
@@ -125,6 +129,7 @@ const generateReportCard = (student) => {
 
 function Automate({ utils }) {
   const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -132,6 +137,7 @@ function Automate({ utils }) {
     const sortedStudents = students.sort((a, b) =>
       a.student_name.localeCompare(b.student_name)
     );
+    setLoading(true); 
 
     for (const student of sortedStudents) {
       setContent(generateReportCard(student));
@@ -160,7 +166,9 @@ function Automate({ utils }) {
         name: pdfName,
         data: pdfData,
       };
+
     }
+    setLoading(false);
   }
 
   const handleGeneratePDF = async () => {
@@ -179,11 +187,28 @@ function Automate({ utils }) {
 
   return (
     <>
-      <div id='content'>{content}</div>
-
       <Button variant='contained' onClick={handleGeneratePDF}>
         Download All Report Cards
       </Button>
+
+      {loading && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(255, 255, 255, 0.6)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+        }}>
+          <CircularProgress size={80} />
+        </div>
+      )}
+
+      <div id='content' style={{marginTop:'100vh'}}>{content}</div>
     </>
   );
 }

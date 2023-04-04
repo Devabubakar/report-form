@@ -123,27 +123,30 @@ function ExcelToJson() {
   const studentsData = utils.studentsData.slice(1);
   
 
-  return (
-    <div>
-      <input
-        type='file'
-        id='upload-button'
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
-      <label htmlFor='upload-button'>
-        <Button variant='outlined' component='span'>
-          Upload Excel File
-        </Button>
-      </label>
-      {error && <Typography color='error'>{error}</Typography>}
-      {jsonData && (
-        <div>
-          <Automate utils={studentsData} />
-        </div>
-      )}
-    </div>
-  );
+// Sort studentsData in descending order by the total marks
+studentsData.sort((a, b) => b.total - a.total);
+
+return (
+  <div>
+    <input
+      type='file'
+      id='upload-button'
+      style={{ display: 'none' }}
+      onChange={handleFileChange}
+    />
+    <label htmlFor='upload-button'>
+      <Button variant='outlined' component='span'>
+        Upload Excel File
+      </Button>
+    </label>
+    {error && <Typography color='error'>{error}</Typography>}
+    {jsonData && (
+      <div>
+        <Automate utils={studentsData} />
+      </div>
+    )}
+  </div>
+);
 }
 
 export default ExcelToJson;
