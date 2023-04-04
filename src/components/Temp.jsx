@@ -1,70 +1,61 @@
 import React, { useState } from 'react';
 import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
-import { data } from './constant';
-import { getGrade, getPoints, getRemark, meanGradeUtil } from '../utils/tableUtils';
+
+import { getGrade, getPoints, getRemark,  meanGradeUtil } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
 import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
 import { useTable } from '../utils/useTable';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-const App = () => {
+const App = ({ studentsData }) => {
   const utils = useTable();
- const [meanPoints, setMeanPoints] = useState('');
-  const dataWithCalculations = data.map((row) => {
-    const percentage =
-      (row[1] !== '' || row[1]) < 30 && (row[2] !== '' || row[2] < 70)
-        ? row[1] + row[2]
-        : '';
-
-    const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
-    const points = grade !== '' ? getPoints(grade) : '';
-    const remark = grade !== '' ? getRemark(grade) : '';
-    return [...row, percentage, grade, points, remark];
-  });
-
-  const [tableData, setTableData] = useState(dataWithCalculations);
-  const [totalPercentage, setTotalPercentage] = useState('');
-  const [totalPoints, setTotalPoints] = useState('');
-  const [meanScore, setMeanScore] = useState('');
+  
+  // Define calculateTotals function outside useEffect
   const calculateTotals = (data) => {
+    //function to calculate total percentage and total points
     const totals = data.reduce(
       (totals, row) => {
         if (row[3] !== '' && row[5] !== '') {
-          totals.totalPercentage += row[3];
-          totals.totalPoints += row[5];
-          totals.subjectCount++;
+          if (row[4] !== '') {
+            totals.totalPoints += row[5];
+            totals.subjectCount++;
+          }
         }
         return totals;
       },
-      { totalPercentage: 0, totalPoints: 0, subjectCount: 0 }
+      { totalPoints: 0, subjectCount: 0 }
     );
-
+  
     let meanScore = '';
-
-    if (utils.form === '1' || utils.form === '2') {
+  
+    if (studentsData.form === 1 || studentsData.form === 2) {
       meanScore =
-        totals.subjectCount > 0 ? (totals.totalPercentage / 10).toFixed(1) : '';
+        totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
     }
-
-    if (utils.form === '3' || utils.form === '4') {
+  
+    if (studentsData.form === 3 || studentsData.form === 4) {
       meanScore =
         totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     }
-
+  
     const meanPoints =
       totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
-      setMeanPoints(meanPoints);
-    const meanGrade = getGrade('english', meanScore);
+    //if form 1 or two, mean grade is mean score, true 
+    //if form 3 or 4, mean grade is mean points, false
+    const meanGrade = meanGradeUtil(studentsData.form, meanScore, meanPoints);
     const teacherComment = getTeacherComment(meanScore);
     const principalComment = getPrincipalComment(meanScore);
-
+  
     utils.setPrincipalsComment(principalComment);
     utils.setClassTeachersComment(teacherComment);
 
+    // Update state for totalPoints and meanScore
+    setTotalPoints(totals.totalPoints);
+    setMeanScore(meanScore);
+  
     return {
       ...totals,
       meanScore,
@@ -72,73 +63,62 @@ const App = () => {
       meanGrade,
       teacherComment,
       principalComment,
-    };
+    };  
   };
 
-  const handleAfterChange = (changes, source) => {
-    if (source === 'edit') {
-      changes.forEach(([row, prop, oldValue, newValue]) => {
-        if (prop === 1 && newValue > 30) {
-          toast.error('CAT cannot be greater than 30', {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          return;
-        }
-        if (prop === 2 && newValue > 70) {
-          toast.error('MAIN cannot be greater than 70', {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          return;
-        }
-
-        if (prop === 1 || prop === 2) {
-          const newRowData = [...tableData[row]];
-          newRowData[prop] = newValue; // Update value
-          newRowData[3] = newRowData[1] + newRowData[2]; // Update percentage
-          const grade = getGrade(newRowData[0], newRowData[3]); // Calculate grade
-          newRowData[4] = grade; // Update grade
-          newRowData[5] = getPoints(grade); // Update points
-          newRowData[6] = getRemark(grade); // Update remarks
-
-          const updatedData = [...tableData];
-          updatedData[row] = newRowData;
-          setTableData(updatedData);
-
-          // Update totalPercentage, totalPoints, meanScore, and meanPoints
-          const { totalPercentage, totalPoints, meanScore } =
-            calculateTotals(updatedData);
-          setTotalPercentage(totalPercentage);
-          setTotalPoints(totalPoints);
-          setMeanScore(meanScore);
-        }
-      });
-    }
-  };
+  const dataWithCalculations = studentsData.subjects.map((row) => {
+    //if row[1] and row[2] are not empty, add them together and store in percentage
+    // if row[1] is 0 or row[2] is 0, percentage is either which is not 0
+    const percentage = row[1] + row[2]
+    
+      
+    const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
+    const points = grade !== '' ? getPoints(grade) : '';
+    const remark = grade !== '' ? getRemark(grade) : '';
+      
+    return [...row, percentage, grade, points, remark];
+ });
+ 
+  const [tableData, setTableData] = useState(dataWithCalculations);
+ 
+  const [totalPoints, setTotalPoints] = useState('');
+  const [meanScore, setMeanScore] = useState('');
 
   React.useEffect(() => {
+    // Pass updated tableData to calculateTotals function
     const { totalPercentage, totalPoints, meanScore } =
       calculateTotals(tableData);
-    setTotalPercentage(totalPercentage);
-    setTotalPoints(totalPoints);
-    setMeanScore(meanScore);
-  }, [tableData]);
+
+    const updatedDataWithCalculations = studentsData.subjects.map((row) => {
+      const percentage = row[1] + row[2]
+    
+
+      const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
+      const points = grade !== '' ? getPoints(grade) : '';
+      const remark = grade !== '' ? getRemark(grade) : '';
+      
+      return [...row, percentage, grade, points, remark];
+    });
+
+    setTableData(updatedDataWithCalculations);
+  }, [studentsData]);
 
   const totalRow =
-    utils.form === '1' || utils.form === '2'
-      ? ['TOTAL MARKS/POINTS', '', '', totalPercentage, '', '']
+    studentsData.form === 1 || studentsData.form === 2
+      ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
+
   const GradeRow =
-    
-       ['MEAN GRADE', '', '', '', meanGradeUtil(utils.form,meanScore, meanPoints), '', '']
-      
+    studentsData.form === 1 || studentsData.form === 2
+      ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGradeUtil(totalPoints, true), '', ''];
 
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
   const outOfRow = ['OUT OF', '', '', '', '', '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
-  
-  
+
   return (
     <div>
       <HotTable
@@ -186,7 +166,6 @@ const App = () => {
         beforeRenderer={addClassesToRows}
         manualRowMove={true}
         licenseKey='non-commercial-and-evaluation'
-        afterChange={handleAfterChange}
         columnHeaderHeight={[20, 20]}
       >
         <HotColumn data={0} readOnly />

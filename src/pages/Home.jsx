@@ -5,6 +5,8 @@ import { Grid } from '@mui/material';
 import CrudInput from '../components/TableInput';
 
 import Combined from './Combined';
+import Typography from '@mui/material/Typography';
+import Automate from '../components/Automate';
 
 const Home = () => {
   return (
@@ -13,6 +15,7 @@ const Home = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <CrudInput />
+         
         </Grid>
         <Grid item xs={12} sm={8}>
           <Combined />
