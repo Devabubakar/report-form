@@ -14,8 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useAuth } from '../utils/useAuth';
 import { deepOrange } from '@mui/material/colors';
+import excel from '../assets/template.xlsx';
 
-const pages = ['Archive'];
+const pages = ['Download Template'];
 const settings = ['Logout'];
 
 function ResponsiveAppBar() {
@@ -97,7 +98,13 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>{page}</Typography>
+                  <a
+                    href={excel}
+                    download
+                    style={{ color: 'white', textDecoration: 'none' }}
+                  >
+                    {page}
+                  </a>
                 </MenuItem>
               ))}
             </Menu>
@@ -123,13 +130,15 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <a
+                  href={excel}
+                  download
+                  style={{ color: 'white', textDecoration: 'none' }}
+                >
+                  {page}
+                </a>
+              </MenuItem>
             ))}
           </Box>
 
