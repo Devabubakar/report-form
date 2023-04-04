@@ -1,61 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
-
-import { getGrade, getPoints, getRemark,  meanGradeUtil } from '../utils/tableUtils';
+import { getGrade, getPoints, getRemark, meanGrade } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
 import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
 import { useTable } from '../utils/useTable';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-const App = ({ studentsData }) => {
+const App = () => {
   const utils = useTable();
-  
-  // Define calculateTotals function outside useEffect
+  const data = utils.studentsData.subjects;
+
+  const [tableData, setTableData] = useState([]);
+
   const calculateTotals = (data) => {
-    //function to calculate total percentage and total points
     const totals = data.reduce(
       (totals, row) => {
         if (row[3] !== '' && row[5] !== '') {
-          if (row[4] !== '') {
-            totals.totalPoints += row[5];
-            totals.subjectCount++;
-          }
+          totals.totalPoints += row[5];
+          totals.subjectCount++;
         }
         return totals;
       },
-      { totalPoints: 0, subjectCount: 0 }
+      {  totalPoints: 0, subjectCount: 0 }
     );
-  
+
+    // Calculate the correct total percentage
+
     let meanScore = '';
-  
-    if (studentsData.form === 1 || studentsData.form === 2) {
+
+    if (utils.studentsData.form === 1 || utils.studentsData.form === 2) {
       meanScore =
-        totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
+        totals.subjectCount > 0
+          ? (utils.studentsData.total / 10).toFixed(1)
+          : '';
     }
-  
-    if (studentsData.form === 3 || studentsData.form === 4) {
+
+    if (utils.studentsData.form === 3 || utils.studentsData.form === 4) {
       meanScore =
         totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     }
-  
+
     const meanPoints =
       totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
-    //if form 1 or two, mean grade is mean score, true 
-    //if form 3 or 4, mean grade is mean points, false
-    const meanGrade = meanGradeUtil(studentsData.form, meanScore, meanPoints);
-    const teacherComment = getTeacherComment(meanScore);
-    const principalComment = getPrincipalComment(meanScore);
-  
+    const meanGrade = getGrade('english', meanScore) || '';
+    const teacherComment = getTeacherComment(meanScore) || '';
+    const principalComment = getPrincipalComment(meanScore) || '';
+
     utils.setPrincipalsComment(principalComment);
     utils.setClassTeachersComment(teacherComment);
 
-    // Update state for totalPoints and meanScore
-    setTotalPoints(totals.totalPoints);
-    setMeanScore(meanScore);
-  
     return {
       ...totals,
       meanScore,
@@ -63,61 +60,54 @@ const App = ({ studentsData }) => {
       meanGrade,
       teacherComment,
       principalComment,
-    };  
+    };
   };
 
-  const dataWithCalculations = studentsData.subjects.map((row) => {
-    //if row[1] and row[2] are not empty, add them together and store in percentage
-    // if row[1] is 0 or row[2] is 0, percentage is either which is not 0
-    const percentage = row[1] + row[2]
-    
-      
-    const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
-    const points = grade !== '' ? getPoints(grade) : '';
-    const remark = grade !== '' ? getRemark(grade) : '';
-      
-    return [...row, percentage, grade, points, remark];
- });
- 
-  const [tableData, setTableData] = useState(dataWithCalculations);
- 
-  const [totalPoints, setTotalPoints] = useState('');
-  const [meanScore, setMeanScore] = useState('');
+  useEffect(() => {
+    if (!data.length) return;
 
-  React.useEffect(() => {
-    // Pass updated tableData to calculateTotals function
-    const { totalPercentage, totalPoints, meanScore } =
-      calculateTotals(tableData);
+    const dataWithCalculations = data.map((row) => {
+      const percentage = utils.studentsData.total;
 
-    const updatedDataWithCalculations = studentsData.subjects.map((row) => {
-      const percentage = row[1] + row[2]
-    
+      const grade = getGrade(row[0], percentage) || '';
+      const points = getPoints(grade) || '';
+      const remark = getRemark(grade) || '';
 
-      const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
-      const points = grade !== '' ? getPoints(grade) : '';
-      const remark = grade !== '' ? getRemark(grade) : '';
-      
       return [...row, percentage, grade, points, remark];
     });
 
-    setTableData(updatedDataWithCalculations);
-  }, [studentsData]);
+    setTableData(dataWithCalculations);
+  }, [data]);
+
+  useEffect(() => {
+    const {  totalPoints, meanScore } =
+      calculateTotals(tableData);
+
+    
+    setTotalPoints(totalPoints);
+    setMeanScore(meanScore);
+  }, [tableData]);
+
+
+  const [totalPoints, setTotalPoints] = useState('');
+  const [meanScore, setMeanScore] = useState('');
 
   const totalRow =
-    studentsData.form === 1 || studentsData.form === 2
-      ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
+    utils.studentsData.form === 1 || utils.studentsData.form === 2
+      ? ['TOTAL MARKS/POINTS', '', '', utils.studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
-
   const GradeRow =
-    studentsData.form === 1 || studentsData.form === 2
-      ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
-      : ['MEAN GRADE', '', '', '', meanGradeUtil(totalPoints, true), '', ''];
+    utils.studentsData.form === 1 || utils.studentsData.form === 2
+      ? ['MEAN GRADE', '', '', '', meanGrade(meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGrade(totalPoints, true), '', ''];
 
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
   const outOfRow = ['OUT OF', '', '', '', '', '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
+
+  
 
   return (
     <div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 import { HotTable, HotColumn } from '@handsontable/react';
 import { data } from './constant';
-import { getGrade, getPoints, getRemark, meanGrade } from '../utils/tableUtils';
+import { getGrade, getPoints, getRemark, meanGradeUtil } from '../utils/tableUtils';
 import { addClassesToRows, alignHeaders } from './hooks';
 import 'handsontable/dist/handsontable.min.css';
 import { getTeacherComment, getPrincipalComment } from '../utils/tableUtils';
@@ -13,7 +13,7 @@ import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   const utils = useTable();
-
+ const [meanPoints, setMeanPoints] = useState('');
   const dataWithCalculations = data.map((row) => {
     const percentage =
       (row[1] !== '' || row[1]) < 30 && (row[2] !== '' || row[2] < 70)
@@ -57,6 +57,7 @@ const App = () => {
 
     const meanPoints =
       totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
+      setMeanPoints(meanPoints);
     const meanGrade = getGrade('english', meanScore);
     const teacherComment = getTeacherComment(meanScore);
     const principalComment = getPrincipalComment(meanScore);
@@ -129,14 +130,15 @@ const App = () => {
 
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
   const GradeRow =
-    utils.form === '1' || utils.form === '2'
-      ? ['MEAN GRADE', '', '', '', meanGrade(meanScore, false), '', '']
-      : ['MEAN GRADE', '', '', '', meanGrade(totalPoints, true), '', ''];
+    
+       ['MEAN GRADE', '', '', '', meanGradeUtil(utils.form,meanScore, meanPoints), '', '']
+      
 
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
   const outOfRow = ['OUT OF', '', '', '', '', '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
-
+  
+  
   return (
     <div>
       <HotTable

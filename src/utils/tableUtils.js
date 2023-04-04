@@ -46,7 +46,7 @@ export const getGrade = (subject, percentage) => {
 
   return matchingEntry?.grade;
 };
-export const meanGrade = (meanScore, isPoint) => {
+export const meanGradeUtil = (meanScore, isPoint) => {
   const gradingSchema = isPoint
     ? [
         { grade: 'E', result: 1 },
@@ -77,7 +77,7 @@ export const meanGrade = (meanScore, isPoint) => {
         { grade: 'A', min: 70, max: 100 },
       ];
 
-  console.log(meanScore);
+  
 
   let matchingEntry = isPoint
     ? gradingSchema.find((entry) => entry.result === Math.round(meanScore))
