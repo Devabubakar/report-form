@@ -115,8 +115,8 @@ const App = ({ studentsData }) => {
       ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
       : ['MEAN GRADE', '', '', '', meanGradeUtil(totalPoints, true), '', ''];
 
-  const positionThisTermRow = ['POSITION THIS TERM', '', '', '', '', '', ''];
-  const outOfRow = ['OUT OF', '', '', '', '', '', ''];
+  const positionThisTermRow = ['POSITION THIS TERM', '', '', '', studentsData.position, '', ''];
+  const outOfRow = ['OUT OF', '', '', '', utils.studentsData.length, '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
 
   return (
@@ -131,8 +131,8 @@ const App = ({ studentsData }) => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={550}
-        colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 70]}
+        height={620}
+        colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 100]}
         nestedHeaders={[
           [
             { label: 'SUBJECTs', colspan: 1 },

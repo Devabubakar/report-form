@@ -136,7 +136,7 @@ export const getRemark = (grade) => {
     case 'C+':
       return 'Average';
     case 'C':
-      return 'Needs Improvement';
+      return 'Work Hard';
     case 'C-':
       return 'Work Hard';
     case 'D+':
@@ -144,7 +144,7 @@ export const getRemark = (grade) => {
     case 'D':
       return 'Very Poor';
     case 'D-':
-      return 'Failing';
+      return 'Failed';
     case 'E':
       return 'Failed';
     default:

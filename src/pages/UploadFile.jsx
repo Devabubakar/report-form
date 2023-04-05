@@ -119,12 +119,23 @@ function ExcelToJson() {
   };
   
 
-  // Remove the first element of studentsData array, which contains hardcoded data
-  const studentsData = utils.studentsData.slice(1);
-  
+// Remove the first element of studentsData array, which contains hardcoded data
+const studentsData = utils.studentsData.slice(1);
 
 // Sort studentsData in descending order by the total marks
 studentsData.sort((a, b) => b.total - a.total);
+let position = 1;
+
+studentsData.map((student) => {
+    student.position = position++;
+    return student;
+});
+
+
+
+
+
+
 
 return (
   <div>

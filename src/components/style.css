@@ -6,18 +6,9 @@ table.htCore .star {
   color: #fcb515;
 }
 
-table.htCore tr.odd td {
-  background: #fafbff;
-}
 
-table.htCore td .progressBar {
-  background: #37bc6c;
-  height: 10px;
-}
 
-table.htCore tr.selected td {
-  background: #edf3fd;
-}
+
 
 /*
     A stylesheet customizing Handsontable style
@@ -69,4 +60,15 @@ body {
 .handsontable thead th,
 .handsontable thead td {
   white-space: normal;
+}
+.handsontable {
+  width: 800px;
+}
+
+.handsontable {
+  background-color: #fff;
+  color: #000;
+}
+.handsontable th {
+  background-color: #fff;
 }
