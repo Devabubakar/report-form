@@ -109,10 +109,14 @@ const App = ({ studentsData }) => {
       ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
-  const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
-  console.log(`TOTal points", ${meanPoints}`)
+  const OtherRow = utils.form === '1' || utils.form === '2' ?
+  ['MEAN SCORE', '', '', meanScore, '', ''] :['MEAN SCORE', '', '',"", "" , meanPoints, '', ] 
+  
 
-
+  const GradeRow =
+    utils.form === '1' || utils.form === '2'
+      ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGradeUtil(meanPoints, true), '', ''];
 
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', studentsData.position, '', ''];
   const outOfRow = ['OUT OF', '', '', '', utils.studentsData.length, '', ''];
@@ -125,7 +129,7 @@ const App = ({ studentsData }) => {
           ...tableData,
           totalRow,
           OtherRow,
-          
+          GradeRow,
           positionThisTermRow,
           outOfRow,
           positionLastTermRow,
