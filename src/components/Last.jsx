@@ -1,11 +1,12 @@
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import React from 'react';
 import { useTable } from '../utils/useTable';
+
 
 const ReportCard = () => {
   const utils = useTable();
   return (
-    <div>
+    <Container maxWidth='lg'>
       <Typography
         color='red'
         variant='p'
@@ -60,7 +61,7 @@ const ReportCard = () => {
         </Typography>
         <div></div>
       </div>
-    </div>
+    </Container>
   );
 };
 

@@ -31,21 +31,21 @@ const App = ({ studentsData }) => {
   
     let meanScore = '';
   
-    if (studentsData.form === 1 || studentsData.form === 2) {
+    if (utils.form === '1'|| utils.form === '2') {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
     }
   
-    if (studentsData.form === 3 || studentsData.form === 4) {
+    if (utils.form === '3' || utils.form === '4') {
       meanScore =
-        totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
+        totals.subjectCount > 0 ? (studentsData.total / 7).toFixed(1) : '';
     }
   
     const meanPoints =
-      totals.subjectCount > 0 ? totals.totalPoints / totals.subjectCount : '';
+      totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     //if form 1 or two, mean grade is mean score, true 
     //if form 3 or 4, mean grade is mean points, false
-    const meanGrade = meanGradeUtil(studentsData.form, meanScore, meanPoints);
+   
     const teacherComment = getTeacherComment(meanScore);
     const principalComment = getPrincipalComment(meanScore);
   
@@ -54,13 +54,13 @@ const App = ({ studentsData }) => {
 
     // Update state for totalPoints and meanScore
     setTotalPoints(totals.totalPoints);
+    setMeanPoints(meanPoints)
     setMeanScore(meanScore);
   
     return {
       ...totals,
       meanScore,
       meanPoints,
-      meanGrade,
       teacherComment,
       principalComment,
     };  
@@ -82,6 +82,7 @@ const App = ({ studentsData }) => {
   const [tableData, setTableData] = useState(dataWithCalculations);
  
   const [totalPoints, setTotalPoints] = useState('');
+  const [meanPoints,setMeanPoints] = useState('');
   const [meanScore, setMeanScore] = useState('');
 
   React.useEffect(() => {
@@ -104,16 +105,14 @@ const App = ({ studentsData }) => {
   }, [studentsData]);
 
   const totalRow =
-    studentsData.form === 1 || studentsData.form === 2
+    utils.form === '1' || utils.form === '2'
       ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow = ['MEAN SCORE', '', '', meanScore, '', ''];
+  console.log(`TOTal points", ${meanPoints}`)
 
-  const GradeRow =
-    studentsData.form === 1 || studentsData.form === 2
-      ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
-      : ['MEAN GRADE', '', '', '', meanGradeUtil(totalPoints, true), '', ''];
+
 
   const positionThisTermRow = ['POSITION THIS TERM', '', '', '', studentsData.position, '', ''];
   const outOfRow = ['OUT OF', '', '', '', utils.studentsData.length, '', ''];
@@ -126,7 +125,7 @@ const App = ({ studentsData }) => {
           ...tableData,
           totalRow,
           OtherRow,
-          GradeRow,
+          
           positionThisTermRow,
           outOfRow,
           positionLastTermRow,

@@ -48,6 +48,7 @@ export const getGrade = (subject, percentage) => {
 };
 
 export const meanGradeUtil = (meanScore, isPoint) => {
+  console.log(meanScore,isPoint)
 
   const gradingSchema = isPoint
     ? [

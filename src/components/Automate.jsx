@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Navigate } from 'react-router';
+import Container from '@mui/material/Container';
 
 import { Typography } from '@mui/material';
 import styled from 'styled-components';
@@ -46,6 +47,7 @@ const PersonalContainer = styled.div`
 `;
 
 const Header = ({ utils }) => {
+  const otherUtils = useTable();
   return (
     <HeaderContainer>
       <HuluchoImg src={Hulucho} alt='hulucho' />
@@ -76,14 +78,14 @@ const Header = ({ utils }) => {
             <Typography fontSize={13} variant='h6' fontWeight={500}>
               FORM:{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {utils.form}
+                {otherUtils.form}
               </span>
             </Typography>
             <Typography fontSize={13} variant='h6' fontWeight={500}>
               YEAR{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
                 
-                {2023}
+                {otherUtils.year}
               </span>
             </Typography>
           </div>
@@ -91,13 +93,13 @@ const Header = ({ utils }) => {
             <Typography fontSize={13} variant='h6' fontWeight={500}>
               STRM:{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {utils.student_id}
+                {utils.class_section}
               </span>
             </Typography>
             <Typography fontSize={13} variant='h6' fontWeight={500}>
               TERM :{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {3}
+                {otherUtils.year}
               </span>
             </Typography>
           </div>
@@ -115,15 +117,17 @@ const Header = ({ utils }) => {
 
 
 
+
+
 const generateReportCard = (student) => {
   
   return (
-    <div>
+    <Container maxWidth='lg' sx={{ marginTop: '3rem', width: '800px' }}>
       <Header utils={student} />
       <AutoTable studentsData={student} />
       <Last />
       <br />
-    </div>
+    </Container>
   );
 };
 
