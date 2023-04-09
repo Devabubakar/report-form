@@ -40,9 +40,10 @@ const App = ({ studentsData }) => {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 7).toFixed(1) : '';
     }
-  
+    setTotalPoints(totals.totalPoints);
     const meanPoints =
-      totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
+      totals.subjectCount > 0 ? (totalPoints / 7).toFixed(1) : '';
+      setMeanPoints(meanPoints)
     //if form 1 or two, mean grade is mean score, true 
     //if form 3 or 4, mean grade is mean points, false
    
@@ -53,8 +54,9 @@ const App = ({ studentsData }) => {
     utils.setClassTeachersComment(teacherComment);
 
     // Update state for totalPoints and meanScore
-    setTotalPoints(totals.totalPoints);
-    setMeanPoints(meanPoints)
+    
+    
+    
     setMeanScore(meanScore);
   
     return {
@@ -87,8 +89,10 @@ const App = ({ studentsData }) => {
 
   React.useEffect(() => {
     // Pass updated tableData to calculateTotals function
-    const { totalPercentage, totalPoints, meanScore } =
+    const { totalPercentage, totalPoints, meanScore, meanPoints } =
       calculateTotals(tableData);
+
+      setMeanPoints(meanPoints)
 
     const updatedDataWithCalculations = studentsData.subjects.map((row) => {
       const percentage = row[1] + row[2]
@@ -97,6 +101,7 @@ const App = ({ studentsData }) => {
       const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
       const points = grade !== '' ? getPoints(grade) : '';
       const remark = grade !== '' ? getRemark(grade) : '';
+
       
       return [...row, percentage, grade, points, remark];
     });
