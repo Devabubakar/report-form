@@ -186,7 +186,7 @@ function Automate({ utils }) {
       saveAs(zipBlob, 'report-cards.zip');
 
     
-        window.location.reload();
+        
       
 
     } catch (error) {

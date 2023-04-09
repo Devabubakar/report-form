@@ -26,6 +26,7 @@ export const useProvideTableInput = () => {
   const [openingDate,setOpeningDate] = useState('')
   const [closingDate,setClosingDate] = useState('')
   const [studentsData, setStudentsData] = useState([])
+  const [initials,setInitials] = useState(null)
 
   return {
     names,
@@ -49,6 +50,8 @@ export const useProvideTableInput = () => {
     openingDate,
     setOpeningDate,
     studentsData,
-    setStudentsData
+    setStudentsData,
+    initials,
+    setInitials
   };
 };

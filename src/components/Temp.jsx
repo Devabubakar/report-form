@@ -82,6 +82,8 @@ const App = ({ studentsData }) => {
     const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
     const points = grade !== '' ? getPoints(grade) : '';
     const remark = grade !== '' ? getRemark(grade) : '';
+    // update intials row with data from utils.initials 
+ 
 
     return [...row, percentage, grade, points, remark];
   });
@@ -97,14 +99,24 @@ const App = ({ studentsData }) => {
 
     const updatedDataWithCalculations = studentsData.subjects.map((row) => {
       const percentage = row[1] + row[2];
+      
+      // Add default value "T" to last column (index 7)
+      // i have intials in utils.initials mapped against subject in this format { "english": "T"}
+      // check if studentsData.subjects[0] is in utils.initials, if it is, get the value of the key and store in initials
+      // if it is not, initials is "T"4
+      
+      const initials = utils.initials[row[0]] || 'T';
 
+      
+    
       const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
       const points = grade !== '' ? getPoints(grade) : '';
-
+    
       const remark = grade !== '' ? getRemark(grade) : '';
-
-      return [...row, percentage, grade, points, remark];
+    
+      return [...row, percentage, grade, points, remark, initials]; // Update row with initials
     });
+    
     const {  totalPoints, meanPoints } =
     calculateTotals(updatedDataWithCalculations);
 
