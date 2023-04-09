@@ -48,6 +48,14 @@ export const getGrade = (subject, percentage) => {
 };
 
 export const meanGradeUtil = (meanScore, isPoint) => {
+
+  if (isPoint && meanScore < 1){
+    return 'E'
+  }
+
+  if (isPoint === false && meanScore > 100){
+    return "A"
+  }
   
 
   const gradingSchema = isPoint
@@ -88,7 +96,7 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         (entry) => meanScore >= entry.min && meanScore <= entry.max
       );
 
-  return matchingEntry?.grade || 'A'
+  return matchingEntry?.grade 
 };
 
 
