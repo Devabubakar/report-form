@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import {  Typography } from '@mui/material';
 import React from 'react';
 import { useTable } from '../utils/useTable';
 
@@ -6,7 +6,7 @@ import { useTable } from '../utils/useTable';
 const ReportCard = () => {
   const utils = useTable();
   return (
-    <Container maxWidth='lg'>
+    <div>
       <Typography
         color='red'
         variant='p'
@@ -19,11 +19,11 @@ const ReportCard = () => {
       <Typography
         variant='subtitle2'
         fontWeight='400'
-        sx={{ margin: '10px 0' }}
+        sx={{ width: '90% ', margin: '10px 0' }}
       >
         {utils.classTeachersComment}
       </Typography>
-      <hr />
+      <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='subtitle2' fontWeight='400'>
           Date:
@@ -34,7 +34,7 @@ const ReportCard = () => {
         <div></div>
       </div>
 
-      <hr />
+      <hr style={{width:'90%'}}/>
       <Typography
         color='red'
         variant='p'
@@ -51,7 +51,7 @@ const ReportCard = () => {
       >
         {utils.principalsComment}
       </Typography>
-      <hr />
+      <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='subtitle2' fontWeight='400'>
           Closing Date: <span>{utils.openingDate} </span>
@@ -61,7 +61,7 @@ const ReportCard = () => {
         </Typography>
         <div></div>
       </div>
-    </Container>
+    </div>
   );
 };
 
