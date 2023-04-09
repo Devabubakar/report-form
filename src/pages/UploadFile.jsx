@@ -109,8 +109,18 @@ function ExcelToJson() {
           });
   
           const studentsData = Object.values(students);
-          setJsonData(studentsData);
-          utils.setStudentsData(studentsData);
+          const filteredStudentsData = studentsData.filter(
+            (student) => student.class_section !== null && student.total !== null
+          );
+          filteredStudentsData.sort((a, b) => b.total - a.total);
+
+
+
+          
+          
+          
+          setJsonData(filteredStudentsData);
+          utils.setStudentsData(filteredStudentsData);
         });
       } else {
         setError('Invalid file type. Please upload an Excel file or CSV file.');
@@ -119,17 +129,21 @@ function ExcelToJson() {
   };
   
 
-// Remove the first element of studentsData array, which contains hardcoded data
-const studentsData = utils.studentsData.slice(1);
+const studentsData = utils.studentsData
 
-// Sort studentsData in descending order by the total marks
-studentsData.sort((a, b) => b.total - a.total);
+
+
 let position = 1;
 
+// Add position property to each student object
 studentsData.map((student) => {
-    student.position = position++;
-    return student;
+  student.position = position++;
+  return student;
 });
+
+
+
+
 
 
 
