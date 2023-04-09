@@ -155,7 +155,7 @@ const App = ({ studentsData }) => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={620}
+        height={600}
         colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 100]}
         nestedHeaders={[
           [

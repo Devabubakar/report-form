@@ -51,7 +51,7 @@ const ReportCard = () => {
       >
         {utils.principalsComment}
       </Typography>
-      <hr style={{width:'90%'}}/>
+        <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='subtitle2' fontWeight='400'>
           Closing Date: <span>{utils.openingDate} </span>

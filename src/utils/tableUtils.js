@@ -175,12 +175,12 @@ export const getPercentage = (cat, main, row, percentageSum) => {
 
 export const getTeacherComment = (meanGrade) => {
   switch (true) {
-    case meanGrade >= 70:
+    case meanGrade >= 75:
       return 'Outstanding performance! Continue to excel and maintain this level of dedication.';
-    case meanGrade >= 65 && meanGrade < 70:
+    case meanGrade >= 65 && meanGrade < 75:
       return "Good job! You have demonstrated a solid understanding, but there's potential for excellence. Strive for improvement next term.";
     case meanGrade >= 60 && meanGrade < 65:
-      return "You have shown moderate understanding, but there's room for growth. Dedicate more time to reviewing class materials for better results.";
+      return "Average. Work hard. You can do better than this.";
     case meanGrade >= 50 && meanGrade < 60:
       return "Your performance is below expectations. It's crucial to invest more time in understanding the topics covered in class.";
     case meanGrade < 50:
@@ -192,12 +192,12 @@ export const getTeacherComment = (meanGrade) => {
 
 export const getPrincipalComment = (meanGrade) => {
   switch (true) {
-    case meanGrade >= 70:
+    case meanGrade >= 75:
       return 'Exceptional work! You have achieved remarkable results this term. Keep it up!';
-    case meanGrade >= 65 && meanGrade < 70:
+    case meanGrade >= 65 && meanGrade < 75:
       return "You have displayed commendable dedication; however, there's always room for growth. Continue to strive for excellence next term.";
     case meanGrade >= 60 && meanGrade < 65:
-      return 'Your performance indicates the need for improvement. We recommend allocating more time to review the topics covered in class.';
+      return 'Aspire to improve this grade.';
     case meanGrade >= 50 && meanGrade < 60:
       return 'Your performance has not met the desired standards. It is crucial to invest more time in understanding the topics covered in class.';
     case meanGrade < 50:
