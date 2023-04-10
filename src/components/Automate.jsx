@@ -99,7 +99,7 @@ const Header = ({ utils }) => {
             <Typography fontSize={13} variant='h6' fontWeight={500}>
               TERM :{' '}
               <span style={{ color: 'red', textTransform: 'uppercase' }}>
-                {otherUtils.year}
+                {otherUtils.term}
               </span>
             </Typography>
           </div>
