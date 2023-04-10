@@ -121,15 +121,18 @@ const App = ({ studentsData }) => {
   React.useEffect(() => {
     const updatedDataWithCalculations = studentsData.subjects.map((row) => {
       const percentage = row[1] + row[2];
-
-      const initials = utils.initials[row[0]] || '';
-
+    
+      const initials = 
+        percentage !== '' && row[4] !== '' 
+          ? utils.initials[row[0]] || '' 
+          : '';  // Only add initials if there is a percentage and grade
+    
       const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
       const points = grade !== '' ? getPoints(grade) : '';
-
+    
       const remark = grade !== '' ? getRemark(grade) : '';
-
-      return [...row, percentage, grade, points, remark, initials]; // Update row with initials
+    
+      return [...row, percentage, grade, points, remark, initials]; 
     });
 
     const { totalPoints, meanPoints } = calculateTotals(
