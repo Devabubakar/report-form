@@ -121,6 +121,7 @@ const Header = ({ utils }) => {
 
 const generateReportCard = (student) => {
   
+  
   return (
     <Container maxWidth='lg' sx={{ marginTop: '3rem', width: '800px' }}>
       <Header utils={student} />
@@ -135,15 +136,16 @@ function Automate({ utils }) {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  
+
 
 
   async function* generatePDFs(students) {
-    const sortedStudents = students.sort((a, b) =>
-      a.student_name.localeCompare(b.student_name)
-    );
+    
     setLoading(true); 
 
-    for (const student of sortedStudents) {
+    for (const student of students) {
+      
       setContent(generateReportCard(student));
 
       // Add a short delay to give the component time to render
@@ -185,7 +187,7 @@ function Automate({ utils }) {
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       saveAs(zipBlob, 'report-cards.zip');
 
-    
+      window.location.reload();
         
       
 

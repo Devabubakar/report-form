@@ -152,7 +152,7 @@ const App = ({ studentsData }) => {
       ? ['MEAN SCORE', '', '', meanScore, '', '']
       : ['MEAN SCORE', '', '', '', '', meanPoints, ''];
 
-  const test = 1;
+
   const GradeRow =
     utils.form === '1' || utils.form === '2'
       ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
