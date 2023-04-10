@@ -20,19 +20,46 @@ const App = ({ studentsData }) => {
 
   // Define calculateTotals function outside useEffect
   const calculateTotals = (data) => {
-    //function to calculate total percentage and total points
+    const requiredSubjects = [
+      'ENGLISH',
+      'KISWAHILI',
+      'MATHEMATICS',
+      'CHEMISTRY',
+      'BIOLOGY',
+    ];
+
     const totals = data.reduce(
       (totals, row) => {
         if (row[3] !== '' && row[5] !== '') {
           if (row[4] !== '') {
-            totals.totalPoints += row[5];
-            totals.subjectCount++;
+            if (requiredSubjects.includes(row[0])) {
+              totals.totalPoints += row[5];
+              totals.subjectCount++;
+            } else if (
+              !totals.optionalSubjects[row[0]] ||
+              row[5] > totals.optionalSubjects[row[0]].points
+            ) {
+              totals.optionalSubjects[row[0]] = {
+                points: row[5],
+                index: totals.optionalSubjects.length,
+              };
+            }
           }
         }
         return totals;
       },
-      { totalPoints: 0, subjectCount: 0 }
+      { totalPoints: 0, subjectCount: 0, optionalSubjects: [] }
     );
+
+    const sortedOptionalSubjects = Object.values(totals.optionalSubjects)
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 7 - totals.subjectCount);
+
+    sortedOptionalSubjects.forEach((subject) => {
+      totals.totalPoints += subject.points;
+      totals.subjectCount++;
+    });
+    console.log(sortedOptionalSubjects);
 
     let meanScore = '';
 
@@ -48,9 +75,7 @@ const App = ({ studentsData }) => {
     setTotalPoints(totals.totalPoints);
     // Update the meanPoints calculation
     const meanPoints =
-      totals.subjectCount > 0
-        ? (totals.totalPoints / 7).toFixed(1)
-        : '';
+      totals.subjectCount > 0 ? (totals.totalPoints / 7).toFixed(1) : '';
     setMeanPoints(meanPoints);
     //if form 1 or two, mean grade is mean score, true
     //if form 3 or 4, mean grade is mean points, false
@@ -82,8 +107,7 @@ const App = ({ studentsData }) => {
     const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
     const points = grade !== '' ? getPoints(grade) : '';
     const remark = grade !== '' ? getRemark(grade) : '';
-    // update intials row with data from utils.initials 
- 
+    // update intials row with data from utils.initials
 
     return [...row, percentage, grade, points, remark];
   });
@@ -95,37 +119,28 @@ const App = ({ studentsData }) => {
   const [meanScore, setMeanScore] = useState('');
 
   React.useEffect(() => {
-
-
     const updatedDataWithCalculations = studentsData.subjects.map((row) => {
       const percentage = row[1] + row[2];
-      
-      // Add default value "T" to last column (index 7)
-      // i have intials in utils.initials mapped against subject in this format { "english": "T"}
-      // check if studentsData.subjects[0] is in utils.initials, if it is, get the value of the key and store in initials
-      // if it is not, initials is "T"4
-      
-      const initials = utils.initials[row[0]] || 'T';
 
-      
-    
+      const initials = utils.initials[row[0]] || '';
+
       const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
       const points = grade !== '' ? getPoints(grade) : '';
-    
+
       const remark = grade !== '' ? getRemark(grade) : '';
-    
+
       return [...row, percentage, grade, points, remark, initials]; // Update row with initials
     });
-    
-    const {  totalPoints, meanPoints } =
-    calculateTotals(updatedDataWithCalculations);
 
-  setMeanPoints(meanPoints);
-  setTotalPoints(totalPoints);
+    const { totalPoints, meanPoints } = calculateTotals(
+      updatedDataWithCalculations
+    );
+
+    setMeanPoints(meanPoints);
+    setTotalPoints(totalPoints);
 
     setTableData(updatedDataWithCalculations);
   }, [studentsData]);
-  
 
   const totalRow =
     utils.form === '1' || utils.form === '2'
