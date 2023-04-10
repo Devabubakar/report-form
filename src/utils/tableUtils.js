@@ -6,7 +6,7 @@ export const getGrade = (subject, percentage) => {
     subject.toLowerCase().includes('ire') ||
     subject.toLowerCase().includes('kiswahili') ||
     subject.toLowerCase().includes('history & govt') ||
-    subject.toLowerCase().includes('geoghraphy') ||
+    subject.toLowerCase().includes('geography') ||
     subject.toLowerCase().includes('arabic') ||
     subject.toLowerCase().includes('business studies');
 
