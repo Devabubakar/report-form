@@ -151,8 +151,8 @@ const App = () => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={550}
-        colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 70]}
+        height={590}
+        colWidths={[160, 80, 80, 10, 10, 10, 100, 70, 10, 70]}
         nestedHeaders={[
           [
             { label: 'SUBJECTs', colspan: 1 },

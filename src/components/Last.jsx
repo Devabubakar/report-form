@@ -9,7 +9,7 @@ const ReportCard = () => {
     <div>
       <Typography
         color='red'
-        variant='p'
+        variant='body2'
         fontWeight='600'
         sx={{ borderBottom: '1px solid black' }}
       >
@@ -17,7 +17,7 @@ const ReportCard = () => {
       </Typography>
       <br />
       <Typography
-        variant='subtitle2'
+        variant='body1'
         fontWeight='400'
         sx={{ width: '90% ', margin: '10px 0' }}
       >
@@ -25,10 +25,10 @@ const ReportCard = () => {
       </Typography>
       <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant='subtitle2' fontWeight='400'>
+        <Typography variant='body2' fontWeight='400'>
           Date:
         </Typography>
-        <Typography variant='subtitle2' fontWeight='400'>
+        <Typography variant='body2' fontWeight='400'>
           Sign:
         </Typography>
         <div></div>
@@ -37,7 +37,7 @@ const ReportCard = () => {
       <hr style={{width:'90%'}}/>
       <Typography
         color='red'
-        variant='p'
+        variant='body2'
         fontWeight='600'
         sx={{ borderBottom: '1px solid black' }}
       >
@@ -45,7 +45,7 @@ const ReportCard = () => {
       </Typography>
       <br />
       <Typography
-        variant='subtitle2'
+        variant='body1'
         fontWeight='400'
         sx={{ margin: '10px 0' }}
       >
@@ -53,10 +53,10 @@ const ReportCard = () => {
       </Typography>
         <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant='subtitle2' fontWeight='400'>
+        <Typography variant='body2' fontWeight='400'>
           Closing Date: <span>{utils.openingDate} </span>
         </Typography>
-        <Typography variant='subtitle2' fontWeight='400'>
+        <Typography variant='body2' fontWeight='400'>
           Opening Date: <span>{utils.closingDate}</span>
         </Typography>
         <div></div>

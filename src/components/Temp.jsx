@@ -185,8 +185,8 @@ const App = ({ studentsData }) => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={600}
-        colWidths={[140, 80, 80, 10, 10, 10, 100, 70, 10, 100]}
+        height={575}
+        colWidths={[160, 80, 80, 10, 10, 10, 100, 70, 10, 100]}
         nestedHeaders={[
           [
             { label: 'SUBJECTs', colspan: 1 },
@@ -210,6 +210,7 @@ const App = ({ studentsData }) => {
           ],
         ]}
         columnSorting={true}
+        className="hot-column-header"
         hiddenColumns={{
           indicators: true,
         }}

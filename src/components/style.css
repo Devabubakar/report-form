@@ -72,3 +72,17 @@ body {
 .handsontable th {
   background-color: #fff;
 }
+.handsontable th,
+.handsontable td {
+  border-color: black !important;
+  font-size: 16px;
+  font-weight: 400;
+  color: black !important;
+}
+
+.handsontable th {
+  background-color: #f2f2f2 !important;
+  color: black;
+}
+
+
