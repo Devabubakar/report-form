@@ -1,6 +1,4 @@
-
 export const getGrade = (subject, percentage) => {
-  
   const isHumanities =
     subject.toLowerCase().includes('english') ||
     subject.toLowerCase().includes('ire') ||
@@ -48,15 +46,13 @@ export const getGrade = (subject, percentage) => {
 };
 
 export const meanGradeUtil = (meanScore, isPoint) => {
-
-  if (isPoint && meanScore < 1){
-    return 'E'
+  if (isPoint && meanScore < 1) {
+    return 'E';
   }
 
-  if (isPoint === false && meanScore > 100){
-    return "A"
+  if (isPoint === false && meanScore > 100) {
+    return 'A';
   }
-  
 
   const gradingSchema = isPoint
     ? [
@@ -74,21 +70,18 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         { grade: 'A', result: 12 },
       ]
     : [
-        { grade: 'E', min: 0, max: 19.0 },
-        { grade: 'D-', min: 19.1, max: 23.9 },
-        { grade: 'D', min: 24.0, max: 28.9 },
-        { grade: 'D+', min: 29.0, max: 33.9 },
-        { grade: 'C-', min: 34.0, max: 38.9 },
-        { grade: 'C', min: 39.0, max: 43.9 },
-        { grade: 'C+', min: 44.0, max: 48.9 },
-        { grade: 'B-', min: 49.0, max: 53.9 },
-        { grade: 'B', min: 54.0, max: 58.9 },
-        { grade: 'B+', min: 59.0, max: 63.9 },
-        { grade: 'A-', min: 64.0, max: 68.9 },
-        { grade: 'A', min: 69.0, max: 100.0 },
+        { grade: 'E', min: 0, max: 30.99 },
+        { grade: 'D-', min: 31.0, max: 40.9 },
+        { grade: 'D', min: 41.0, max: 45.9 },
+        { grade: 'D+', min: 46.0, max: 49.9 },
+        { grade: 'C-', min: 50.0, max: 52.9 },
+        { grade: 'C', min: 53.0, max: 56.9 },
+        { grade: 'C+', min: 57.0, max: 59.9 },
+        { grade: 'B-', min: 60.0, max: 62.9 },
+        { grade: 'B', min: 63.0, max: 66.9 },
+        { grade: 'B+', min: 67.0, max: 69.9 },
+        { grade: 'A', min: 70.0, max: 100 },
       ];
-
-  
 
   let matchingEntry = isPoint
     ? gradingSchema.find((entry) => entry.result === Math.round(meanScore))
@@ -96,9 +89,8 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         (entry) => meanScore >= entry.min && meanScore <= entry.max
       );
 
-  return matchingEntry?.grade 
+  return matchingEntry?.grade;
 };
-
 
 export const getPoints = (grade) => {
   switch (grade) {
@@ -175,12 +167,11 @@ export const getPercentage = (cat, main, row, percentageSum) => {
 
 export const getTeacherComment = (meanGrade) => {
   switch (true) {
-    
-    case meanGrade >= 48 :
-      return  'Outstanding performance! Continue to excel and maintain this level of dedication.'
-    case meanGrade >= 34 && meanGrade < 47:
-      return "Average. Work hard. You can do better than this.";
-    case meanGrade < 34:
+    case meanGrade >= 57:
+      return 'Outstanding performance! Continue to excel and maintain this level of dedication.';
+    case meanGrade >= 50.0 && meanGrade < 56.9:
+      return 'Average. Work hard. You can do better than this.';
+    case meanGrade < 49.9:
       return 'Unfortunately, your performance this term was inadequate. We strongly suggest devoting more time to reviewing class materials.';
     default:
       return '';
@@ -189,12 +180,12 @@ export const getTeacherComment = (meanGrade) => {
 
 export const getPrincipalComment = (meanGrade) => {
   switch (true) {
-    case meanGrade >= 48 :
-      return  'Exceptional performance you have achieved a remarkable result this term. Keep it up.'
-    case meanGrade >= 34 && meanGrade < 47:
-      return "Aspire to improve this grade";
-    case meanGrade < 34:
-      return 'Your results this term were disappointing. We strongly suggest to Dedicate more time to reviewing Class materials'
+    case meanGrade >= 57:
+      return 'Exceptional performance you have achieved a remarkable result this term. Keep it up.';
+    case meanGrade >= 50.0 && meanGrade < 56.9:
+      return 'Aspire to improve this grade';
+    case meanGrade < 49.9:
+      return 'Your results this term were disappointing. We strongly suggest to Dedicate more time to reviewing Class materials';
     default:
       return '';
   }
