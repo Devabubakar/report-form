@@ -63,12 +63,12 @@ const App = ({ studentsData }) => {
 
     let meanScore = '';
 
-    if (utils.form === '1' || utils.form === '2'  || utils.form === '3') {
+    if (utils.form === '1' || utils.form === '2'  ) {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
     }
 
-    if (utils.form === '4' ) {
+    if (utils.form === '4' || utils.form === '3' ) {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 7).toFixed(1) : '';
     }
@@ -146,18 +146,18 @@ const App = ({ studentsData }) => {
   }, [studentsData]);
 
   const totalRow =
-    utils.form === '1' || utils.form === '2'  || utils.form === '3'
+    utils.form === '1' || utils.form === '2'  
       ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow =
-    utils.form === '1' || utils.form === '2'  || utils.form === '3'
+    utils.form === '1' || utils.form === '2'  
       ? ['MEAN SCORE', '', '', meanScore, '', '']
       : ['MEAN SCORE', '', '', '', '', meanPoints, ''];
 
 
   const GradeRow =
-    utils.form === '1' || utils.form === '2' || utils.form === '3'
+    utils.form === '1' || utils.form === '2' 
       ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
       : ['MEAN GRADE', '', '', '', meanGradeUtil(meanPoints, true), '', ''];
 
