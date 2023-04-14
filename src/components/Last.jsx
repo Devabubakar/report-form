@@ -23,7 +23,7 @@ const ReportCard = () => {
       >
         {utils.classTeachersComment}
       </Typography>
-      <hr style={{width:'90%'}}/>
+      
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='body2' fontWeight='400'>
           Date:
@@ -51,7 +51,17 @@ const ReportCard = () => {
       >
         {utils.principalsComment}
       </Typography>
-        <hr style={{width:'90%'}}/>
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant='body2' fontWeight='400'>
+          Date:
+        </Typography>
+        <Typography variant='body2' fontWeight='400'>
+          Sign:
+        </Typography>
+        <div></div>
+      </div>
+      <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='body2' fontWeight='400'>
           Closing Date: <span>{utils.openingDate} </span>

@@ -63,12 +63,12 @@ const App = ({ studentsData }) => {
 
     let meanScore = '';
 
-    if (utils.form === '1' || utils.form === '2') {
+    if (utils.form === '1' || utils.form === '2'  ) {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
     }
 
-    if (utils.form === '3' || utils.form === '4') {
+    if (utils.form === '4' || utils.form === '3' ) {
       meanScore =
         totals.subjectCount > 0 ? (studentsData.total / 7).toFixed(1) : '';
     }
@@ -146,18 +146,18 @@ const App = ({ studentsData }) => {
   }, [studentsData]);
 
   const totalRow =
-    utils.form === '1' || utils.form === '2'
+    utils.form === '1' || utils.form === '2'  
       ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
       : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
 
   const OtherRow =
-    utils.form === '1' || utils.form === '2'
+    utils.form === '1' || utils.form === '2'  
       ? ['MEAN SCORE', '', '', meanScore, '', '']
       : ['MEAN SCORE', '', '', '', '', meanPoints, ''];
 
 
   const GradeRow =
-    utils.form === '1' || utils.form === '2'
+    utils.form === '1' || utils.form === '2' 
       ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
       : ['MEAN GRADE', '', '', '', meanGradeUtil(meanPoints, true), '', ''];
 
@@ -185,18 +185,14 @@ const App = ({ studentsData }) => {
           outOfRow,
           positionLastTermRow,
         ]}
-        height={575}
+        height={570}
         colWidths={[160, 80, 80, 10, 10, 10, 100, 70, 10, 100]}
         nestedHeaders={[
           [
             { label: 'SUBJECTs', colspan: 1 },
             { label: 'CAT', colspan: 1 },
             { label: 'MAIN ', colspan: 1 },
-            { label: 'Total', colspan: 3 },
-            { label: 'Remarks', colspan: 1 },
-            { label: 'INITIALS', colspan: 1 },
-          ],
-
+            { label: 'Total', colspan: 3 }, { label: 'Remarks', colspan: 1 }, { label: 'INITIALS', colspan: 1 }, ],
           [
             '',
             'out of 30',
