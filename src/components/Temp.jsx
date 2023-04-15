@@ -65,7 +65,7 @@ const App = ({ studentsData }) => {
 
     if (utils.form === '1' || utils.form === '2'  ) {
       meanScore =
-        totals.subjectCount > 0 ? (studentsData.total / 10).toFixed(1) : '';
+        totals.subjectCount > 0 ? (studentsData.total / 9).toFixed(1) : '';
     }
 
     if (utils.form === '4' || utils.form === '3' ) {
