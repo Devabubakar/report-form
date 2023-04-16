@@ -70,16 +70,17 @@ export const meanGradeUtil = (meanScore, isPoint) => {
         { grade: 'A', result: 12 },
       ]
     : [
-        { grade: 'E', min: 0, max: 30.99 },
-        { grade: 'D-', min: 31.0, max: 40.9 },
-        { grade: 'D', min: 41.0, max: 45.9 },
-        { grade: 'D+', min: 46.0, max: 49.9 },
-        { grade: 'C-', min: 50.0, max: 52.9 },
-        { grade: 'C', min: 53.0, max: 56.9 },
-        { grade: 'C+', min: 57.0, max: 59.9 },
-        { grade: 'B-', min: 60.0, max: 62.9 },
-        { grade: 'B', min: 63.0, max: 66.9 },
-        { grade: 'B+', min: 67.0, max: 69.9 },
+        { grade: 'E', min: 0.0, max: 19.9 },
+        { grade: 'D-', min: 20.0, max: 24.9 },
+        { grade: 'D', min: 25.0, max: 29.9 },
+        { grade: 'D+', min: 30.0, max: 34.9 },
+        { grade: 'C-', min: 35.0, max: 39.9 },
+        { grade: 'C', min: 40.0, max: 44.9 },
+        { grade: 'C+', min: 45.0, max: 49.9 },
+        { grade: 'B-', min: 50.0, max: 54.9 },
+        { grade: 'B', min: 55.0, max: 59.9 },
+        { grade: 'B+', min: 60.0, max: 64.9 },
+        { grade: 'A-', min: 65.0, max: 69.9 },
         { grade: 'A', min: 70.0, max: 100 },
       ];
 
@@ -91,6 +92,7 @@ export const meanGradeUtil = (meanScore, isPoint) => {
 
   return matchingEntry?.grade;
 };
+
 
 export const getPoints = (grade) => {
   switch (grade) {
