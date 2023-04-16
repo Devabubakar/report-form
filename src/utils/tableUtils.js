@@ -170,11 +170,11 @@ export const getPercentage = (cat, main, row, percentageSum) => {
 export const getTeacherComment = (meanGrade) => {
   console.log(meanGrade)
   switch (true) {
-    case meanGrade >= 57:
+    case meanGrade >= 45:
       return 'Outstanding performance! Continue to excel and maintain this level of dedication.';
-    case meanGrade >= 50.0 && meanGrade <= 56.9:
+    case meanGrade >= 35 && meanGrade <= 44.9:
       return 'Average. Work hard. You can do better than this.';
-    case meanGrade <= 49.9:
+    case meanGrade <= 34.9:
       return 'Unfortunately, your performance this term was inadequate. We strongly suggest devoting more time to reviewing class materials.';
     default:
       return '';
@@ -183,11 +183,11 @@ export const getTeacherComment = (meanGrade) => {
 
 export const getPrincipalComment = (meanGrade) => {
   switch (true) {
-    case meanGrade >= 57:
+    case meanGrade >= 45:
       return 'Exceptional performance you have achieved a remarkable result this term. Keep it up.';
-    case meanGrade >= 50.0 && meanGrade <= 56.9:
+    case meanGrade >= 35 && meanGrade <= 44.9:
       return 'Aspire to improve this grade';
-    case meanGrade <= 49.9:
+    case meanGrade <= 34.9:
       return 'Your results this term were disappointing. We strongly suggest to Dedicate more time to reviewing Class materials';
     default:
       return '';
