@@ -64,10 +64,10 @@ const ReportCard = () => {
       <hr style={{width:'90%'}}/>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='body2' fontWeight='400'>
-          Closing Date: <span>{utils.openingDate} </span>
+          Closing Date: <span>{utils.closingDate} </span>
         </Typography>
         <Typography variant='body2' fontWeight='400'>
-          Opening Date: <span>{utils.closingDate}</span>
+          Opening Date: <span>{utils.openingDate}</span>
         </Typography>
         <div></div>
       </div>
