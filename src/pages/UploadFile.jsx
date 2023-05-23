@@ -109,8 +109,13 @@ function ExcelToJson() {
               const cat = row[catIndexes[i]] || '';
               const main = row[mainIndexes[i]] || '';
 
+              const catValue = parseInt(cat) || "";
+              const mainValue = parseInt(main) || "";
+
+              const percentage = catValue + mainValue;
+
               // Modify subjectData array format to [subjectName, cat, main]
-              const subjectData = [subjectName.toUpperCase(), cat, main];
+              const subjectData = [subjectName.toUpperCase(), cat, main,percentage];
 
               // Push subjectData array into subjectsData array
               subjectsData.push(subjectData);
