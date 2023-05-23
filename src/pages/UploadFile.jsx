@@ -6,6 +6,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Navigate } from 'react-router';
 import Automate from '../components/Automate';
+import { getGrade, getPoints, getRemark, meanGradeUtil } from '../utils/tableUtils';
 
 function ExcelToJson() {
   const [file, setFile] = useState(null);
@@ -114,8 +115,12 @@ function ExcelToJson() {
 
               const percentage = catValue + mainValue;
 
+              const grade = percentage !== '' ? getGrade(subjectName, percentage) : '';
+              const points = grade !== '' ? getPoints(grade) : '';
+              const remark = grade !== '' ? getRemark(grade) : '';
+
               // Modify subjectData array format to [subjectName, cat, main]
-              const subjectData = [subjectName.toUpperCase(), cat, main,percentage];
+              const subjectData = [subjectName.toUpperCase(), cat, main,percentage,grade,points,remark];
 
               // Push subjectData array into subjectsData array
               subjectsData.push(subjectData);
