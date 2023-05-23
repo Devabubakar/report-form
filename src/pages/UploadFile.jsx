@@ -97,9 +97,6 @@ function ExcelToJson() {
                 student_id: student_id,
                 student_name: row[1],
                 class_section: row[2],
-                form: header[0],
-                year: header[1],
-                term: header[2],
                 total: '',
                 subjects: [],
               };
@@ -155,6 +152,8 @@ function ExcelToJson() {
     return student;
   });
 
+
+console.log(studentsData)
   
 
   return (
