@@ -212,11 +212,10 @@ function ExcelToJson() {
             students[student_id].teacherComment = teacherComment;
             students[student_id].principalComment = principalComment;
   
-            // Extract the value of the last column
-            const totalMarks = row[lastColumnIndex];
+            
   
             // Add the totalMarks to the corresponding student object
-            students[student_id].total = totalMarks;
+            students[student_id].total = totals.totalMarks
   
             // Set subjects property of students object to subjectsData array
             students[student_id].subjects = subjectsData;
@@ -224,7 +223,7 @@ function ExcelToJson() {
   
           const studentsData = Object.values(students);
           const filteredStudentsData = studentsData.filter(
-            (student) => student.class_section !== null && student.total !== null
+            (student) => student.class_section !== null && student.total !== 0
           );
           filteredStudentsData.sort((a, b) => b.total - a.total);
   
