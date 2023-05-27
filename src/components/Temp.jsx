@@ -148,18 +148,18 @@ const App = ({ studentsData }) => {
   const totalRow =
     utils.form === '1' || utils.form === '2'  
       ? ['TOTAL MARKS/POINTS', '', '', studentsData.total, '', '']
-      : ['TOTAL MARKS/POINTS', '', '', '', '', totalPoints, ''];
+      : ['TOTAL MARKS/POINTS', '', '', '', '', studentsData.totalPoints, ''];
 
   const OtherRow =
     utils.form === '1' || utils.form === '2'  
-      ? ['MEAN SCORE', '', '', meanScore, '', '']
-      : ['MEAN SCORE', '', '', '', '', meanPoints, ''];
+      ? ['MEAN SCORE', '', '', studentsData.meanScore, '', '']
+      : ['MEAN SCORE', '', '', '', '', studentsData.meanPoints, ''];
 
 
   const GradeRow =
     utils.form === '1' || utils.form === '2' 
-      ? ['MEAN GRADE', '', '', '', meanGradeUtil(meanScore, false), '', '']
-      : ['MEAN GRADE', '', '', '', meanGradeUtil(meanPoints, true), '', ''];
+      ? ['MEAN GRADE', '', '', '', meanGradeUtil(studentsData.meanScore, false), '', '']
+      : ['MEAN GRADE', '', '', '', meanGradeUtil(studentsData.meanPoints, true), '', ''];
 
   const positionThisTermRow = [
     'POSITION THIS TERM',
