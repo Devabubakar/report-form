@@ -205,7 +205,7 @@ function ExcelToJson() {
             const principalComment = getPrincipalComment(meanScore);
 
             // Add meanScore, meanGrade, meanPoints, teacherComment, principalComment to subjectsData array
-            if (utils.form === '2' && students.length % 8 === 0) {
+            if (utils.form === '2') {
               students[student_id].meanScore = (totals.totalMarks / 8).toFixed(1);
             } else if (utils.form === '3' || utils.form === '4') {
               students[student_id].meanScore = (totals.totalMarks / 7).toFixed(1);
