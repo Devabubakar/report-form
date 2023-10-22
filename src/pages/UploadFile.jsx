@@ -208,7 +208,7 @@ function ExcelToJson() {
             students[student_id].meanScore =
               utils.form === '3' || utils.form === '4'
                 ? (totals.totalMarks / 7).toFixed(1)
-                : (totals.totalMarks / 9).toFixed(1);
+                : (totals.totalMarks / 8).toFixed(1);
             students[student_id].totalPoints = totals.totalPoints;
             students[student_id].meanGrade = meanGrade;
             students[student_id].meanPoints = meanPoints;
