@@ -187,7 +187,7 @@ function Automate({ utils }) {
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       saveAs(zipBlob, 'report-cards.zip');
 
-      //window.location.reload();
+      window.location.reload();
         
       
 
