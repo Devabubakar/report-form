@@ -59,7 +59,7 @@ const App = ({ studentsData }) => {
       totals.totalPoints += subject.points;
       totals.subjectCount++;
     });
-    console.log(sortedOptionalSubjects);
+    
 
     let meanScore = '';
 
@@ -108,8 +108,13 @@ const App = ({ studentsData }) => {
     const points = grade !== '' ? getPoints(grade) : '';
     const remark = grade !== '' ? getRemark(grade) : '';
     // update intials row with data from utils.initials
+    let initials = ""
+    if (percentage !== "" && row[4] !== ""){
+      initials = utils.initials[row[0]]
+    }
+  
 
-    return [...row, percentage, grade, points, remark];
+    return [...row, percentage, grade, points, remark,];
   });
 
   const [tableData, setTableData] = useState(dataWithCalculations);
@@ -118,32 +123,36 @@ const App = ({ studentsData }) => {
   const [meanPoints, setMeanPoints] = useState('');
   const [meanScore, setMeanScore] = useState('');
 
+
+  
+
   React.useEffect(() => {
     const updatedDataWithCalculations = studentsData.subjects.map((row) => {
       const percentage = row[1] + row[2];
-    
-      const initials = 
-        percentage !== '' && row[4] !== '' 
-          ? utils.initials[row[0]] || '' 
-          : '';  // Only add initials if there is a percentage and grade
-    
+      let initials = '';
+      
+      if (percentage !== "" && row[4] !== ""){
+        initials = utils.initials[row[0]] || '';
+      }
+      
       const grade = percentage !== '' ? getGrade(row[0], percentage) : '';
       const points = grade !== '' ? getPoints(grade) : '';
-    
       const remark = grade !== '' ? getRemark(grade) : '';
-    
-      return [...row, percentage, grade, points, remark, initials]; 
+  
+      return [...row, percentage, grade, points, remark]; 
     });
-
-    const { totalPoints, meanPoints } = calculateTotals(
-      updatedDataWithCalculations
-    );
-
+  
+    const { totalPoints, meanPoints } = calculateTotals(updatedDataWithCalculations);
+  
     setMeanPoints(meanPoints);
     setTotalPoints(totalPoints);
-
+  
     setTableData(updatedDataWithCalculations);
-  }, [studentsData]);
+  }, [ studentsData]);
+
+  console.log(tableData)
+  console.log(utils.initials)
+  
 
   const totalRow =
     utils.form === '1' || utils.form === '2'  
@@ -172,6 +181,7 @@ const App = ({ studentsData }) => {
   ];
   const outOfRow = ['OUT OF', '', '', '', utils.studentsData.length, '', ''];
   const positionLastTermRow = ['POSITION LAST TERM', '', '', '', '', '', ''];
+  console.log(tableData)
 
   return (
     <div>
@@ -226,7 +236,7 @@ const App = ({ studentsData }) => {
         <HotColumn data={4} readOnly />
         <HotColumn data={5} readOnly />
         <HotColumn data={6} readOnly />
-        <HotColumn data={7} />
+        
       </HotTable>
       <ToastContainer />
     </div>

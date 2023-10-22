@@ -149,7 +149,7 @@ function Automate({ utils }) {
       setContent(generateReportCard(student));
 
       // Add a short delay to give the component time to render
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       const canvas = await html2canvas(document.querySelector('#content'));
 
@@ -187,7 +187,7 @@ function Automate({ utils }) {
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       saveAs(zipBlob, 'report-cards.zip');
 
-      window.location.reload();
+      //window.location.reload();
         
       
 

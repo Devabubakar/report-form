@@ -36,6 +36,7 @@ function ExcelToJson() {
       ) {
         setError(null);
         setFile(files[0]);
+        
         readXlsxFile(files[0], { sheet: 2 }).then((rows) => {
           // get access to headers and rows
 
@@ -49,8 +50,15 @@ function ExcelToJson() {
               Initials[subject] = initial;
             }
           });
+         
           utils.setInitials(Initials);
+          console.log(Initials)
+          
         });
+
+        
+
+        
         readXlsxFile(files[0]).then((rows) => {
           const headerRow = rows.shift();
 
